@@ -4,8 +4,8 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
 public class BankVault extends ApplicationAdapter {
 	SpriteBatch batch;
@@ -20,7 +20,7 @@ public class BankVault extends ApplicationAdapter {
         float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 		camera = new OrthographicCamera(w, h);
-		//mh = new MapHandler(map);
+		mh = new MapHandler(new TmxMapLoader().load("map/map.tmx"));
 	}
 
 	@Override
@@ -29,6 +29,9 @@ public class BankVault extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		camera.update();
+		updateCam(0, 0); // TODO player x and y
+		mh.render(camera);
+		
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		
