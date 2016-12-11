@@ -1,4 +1,4 @@
-package net.sleepystudios.bankvault;
+package net.sleepystudios.bankvault.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -6,21 +6,15 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Rectangle;
 
-import net.sleepystudios.bankvault.proc.ProcObject;
+import net.sleepystudios.bankvault.MapHandler;
 
-public class Player {
-	float x, y;
+public class Player extends Entity {
 	OrthographicCamera camera;
-	MapHandler mh;
-	Sprite sprite;
-	Rectangle box;
 	
 	public Player(OrthographicCamera camera, MapHandler mh) {
+		super(mh);
 		this.camera = camera;
-		this.mh = mh;
 		
 		sprite = new Sprite(new Texture("player.png"));
 		move(x, y);
@@ -45,33 +39,10 @@ public class Player {
         }
 	}
 	
-	private boolean isBlocked(float x, float y) {
-		updateHitBox(x, y);
-		if(x<0 || x>mh.getWidth()-mh.getTileSize() || y<0 || y>mh.getHeight()-mh.getTileSize()) return true;
-		
-		for(Rectangle r : mh.rects) {
-			if(Intersector.overlaps(box, r)) return true;
-		}
-		
-		for(ProcObject o : mh.procObjs) {
-			if(o.rect!=null && Intersector.overlaps(box, o.rect)) return true;
-		}
-		
-		return false;
-	}
-	
-	private void move(float x, float y) {
-		updateHitBox(x, y);
-		
-		this.x = x; 
-		this.y = y;
-		sprite.setPosition(x, y);
+	@Override
+	protected void move(float x, float y) {
+		super.move(x, y);
 		updateCam();
-	}
-	
-	int OX = 0, OY = 0, FW = 32, FH = 32;
-	public void updateHitBox(float x, float y) {
-		box = new Rectangle(x+OX, y+OY, FW-(OX*2), FH-(OY*2));
 	}
 	
 	private void updateCam() {

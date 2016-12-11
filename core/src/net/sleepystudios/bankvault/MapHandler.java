@@ -9,6 +9,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 
+import net.sleepystudios.bankvault.entities.Drone;
 import net.sleepystudios.bankvault.proc.Crate;
 import net.sleepystudios.bankvault.proc.Junk;
 import net.sleepystudios.bankvault.proc.ProcObject;
@@ -19,6 +20,7 @@ public class MapHandler {
 	private int[] layers = {0}, fringeLayers = {3};
 	public ArrayList<Rectangle> rects = new ArrayList<Rectangle>();
 	public ArrayList<ProcObject> procObjs = new ArrayList<ProcObject>();
+	public ArrayList<Drone> drones = new ArrayList<Drone>();
 	
 	public MapHandler(TiledMap map) {
 		this.map = map;
@@ -44,15 +46,20 @@ public class MapHandler {
 	}
 	
 	public void gen() {
-		int size = 10;
+		int size[] = {10, 3};
 		
 		procObjs.clear();
-		for(int i=0; i<size; i++) {
+		for(int i=0; i<size[0]; i++) {
 			if(BankVault.rand(0,1)==0) {
 				procObjs.add(new Crate(this));
 			} else {
 				procObjs.add(new Junk(this));
 			}
+		}
+		
+		drones.clear();
+		for(int i=0; i<size[1]; i++) {
+			drones.add(new Drone(this));
 		}
 	}
 	

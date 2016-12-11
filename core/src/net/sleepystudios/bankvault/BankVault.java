@@ -15,6 +15,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
 
+import net.sleepystudios.bankvault.entities.Drone;
+import net.sleepystudios.bankvault.entities.Player;
 import net.sleepystudios.bankvault.proc.ProcObject;
 
 public class BankVault extends ApplicationAdapter implements InputProcessor {
@@ -55,6 +57,8 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 		
 		for(ProcObject o : mh.procObjs) o.render(batch);
 		
+		for(Drone d : mh.drones) d.render(batch);
+		
 		if(showHitBoxes) renderBoxes();
 		
 		batch.end();
@@ -69,6 +73,7 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 		
 		for(Rectangle r : mh.rects) sr.rect(r.x, r.y, r.width, r.height);
 		for(ProcObject o : mh.procObjs) sr.rect(o.rect.x, o.rect.y, o.rect.width, o.rect.height);
+		for(Drone d : mh.drones) sr.rect(d.box.x, d.box.y, d.box.width, d.box.height);
 		sr.rect(p.box.x, p.box.y, 32, 32);
 		
 		sr.end();
