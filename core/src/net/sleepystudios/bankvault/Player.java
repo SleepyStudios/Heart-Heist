@@ -3,8 +3,10 @@ package net.sleepystudios.bankvault;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Player {
@@ -17,13 +19,16 @@ public class Player {
 	public Player(OrthographicCamera camera, MapHandler mh) {
 		this.camera = camera;
 		this.mh = mh;
-		updateHitBox(x, y);
+		
+		sprite = new Sprite(new Texture("player.png"));
+		move(x, y);
 	}
 	
 	public void render(SpriteBatch batch) {
-		float speed = 100f * Gdx.graphics.getDeltaTime();
+		sprite.draw(batch);
 		
-		// keys
+		// movement
+		float speed = 100f * Gdx.graphics.getDeltaTime();
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             if(!isBlocked(x, y+speed)) move(x, y + speed);
         }
@@ -43,7 +48,7 @@ public class Player {
 		if(x<0 || x>mh.getWidth()-mh.getTileSize() || y<0 || y>mh.getHeight()-mh.getTileSize()) return true;
 		
 		for(Rectangle r : mh.rects) {
-			if(box.contains(r)) return true;
+			if(Intersector.overlaps(box, r)) return true;
 		}
 		
 		return false;
@@ -54,12 +59,13 @@ public class Player {
 		
 		this.x = x; 
 		this.y = y;
+		sprite.setPosition(x, y);
 		updateCam();
 	}
 	
-	int OX = 10, OY = 10, FW = 32, FH = 32;
+	int OX = 0, OY = 0, FW = 32, FH = 32;
 	public void updateHitBox(float x, float y) {
-		box = new Rectangle(x+OX-4, y+OY, FW-(OX*2), FH-(OY*2));
+		box = new Rectangle(x+OX, y+OY, FW-(OX*2), FH-(OY*2));
 	}
 	
 	private void updateCam() {

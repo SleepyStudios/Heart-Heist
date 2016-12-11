@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Rectangle;
 public class MapHandler {
 	public TiledMap map; 
 	private TiledMapRenderer mapRenderer;
-	private int[] layers = {0, 1, 2}, fringeLayers = {3};
+	private int[] layers = {0}, fringeLayers = {3};
 	public ArrayList<Rectangle> rects = new ArrayList<Rectangle>();
 	
 	public MapHandler(TiledMap map) {
