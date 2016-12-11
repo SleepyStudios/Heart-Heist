@@ -17,6 +17,10 @@ public class Player extends Entity {
 		this.camera = camera;
 		
 		sprite = new Sprite(new Texture("player.png"));
+		
+		x = 9*32;
+		y = mh.getHeight()-8*32;
+		
 		move(x, y);
 	}
 	

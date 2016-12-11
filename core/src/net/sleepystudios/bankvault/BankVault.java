@@ -62,6 +62,8 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 		if(showHitBoxes) renderBoxes();
 		
 		batch.end();
+		
+        mh.renderFringe(camera);
 	}
 	
 	private void renderBoxes() {

@@ -10,14 +10,14 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 
 import net.sleepystudios.bankvault.entities.Drone;
-import net.sleepystudios.bankvault.proc.Crate;
-import net.sleepystudios.bankvault.proc.Junk;
+import net.sleepystudios.bankvault.proc.BarStack;
+import net.sleepystudios.bankvault.proc.Shelf;
 import net.sleepystudios.bankvault.proc.ProcObject;
 
 public class MapHandler {
 	public TiledMap map; 
 	private TiledMapRenderer mapRenderer;
-	private int[] layers = {0}, fringeLayers = {3};
+	private int[] layers = {0}, fringeLayers = {1,2};
 	public ArrayList<Rectangle> rects = new ArrayList<Rectangle>();
 	public ArrayList<ProcObject> procObjs = new ArrayList<ProcObject>();
 	public ArrayList<Drone> drones = new ArrayList<Drone>();
@@ -33,13 +33,16 @@ public class MapHandler {
 	private void loadRects() {
 		int s = getTileSize();
 		
-		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(0);
+		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(fringeLayers[0]);
         for(int x = 0; x < layer.getWidth();x++){
             for(int y = 0; y < layer.getHeight();y++){
                 TiledMapTileLayer.Cell cell = layer.getCell(x,y);
-                Object property = cell.getTile().getProperties().get("wall");
-                if(property != null){
-                    rects.add(new Rectangle(x*s, y*s, s, s));
+                
+                if(cell!=null) {
+                	Object property = cell.getTile().getProperties().get("wall");
+                    if(property != null){
+                        rects.add(new Rectangle(x*s, y*s, s, s));
+                    }
                 }
             }
         }
@@ -51,9 +54,9 @@ public class MapHandler {
 		procObjs.clear();
 		for(int i=0; i<size[0]; i++) {
 			if(BankVault.rand(0,1)==0) {
-				procObjs.add(new Crate(this));
+				procObjs.add(new BarStack(this));
 			} else {
-				procObjs.add(new Junk(this));
+				procObjs.add(new Shelf(this));
 			}
 		}
 		

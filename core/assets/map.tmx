@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="32" tileheight="32" nextobjectid="1">
- <tileset firstgid="1" name="badlogic" tilewidth="32" tileheight="32" tilecount="72" columns="8">
-  <image source="badlogic.jpg" width="256" height="288"/>
-  <tile id="0">
+ <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="32" tilecount="36" columns="4">
+  <image source="tileset.png" width="128" height="288"/>
+  <tile id="7">
    <properties>
     <property name="wall" value="true"/>
    </properties>
@@ -10,7 +10,17 @@
  </tileset>
  <layer name="Tile Layer 1" width="20" height="20">
   <data encoding="base64" compression="zlib">
-   eJxzZGBgcKQBZkTDtLBjKGH08BgNG9zhRA/zyLWH1uYxYsGDyX2U2kMt/wwV84Y7BgAPbV1R
+   eJxjZGBgYBzFo3gUj+JRPIpJxADrnAGR
+  </data>
+ </layer>
+ <layer name="Tile Layer 2" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzjYGBg4CCAhYFYhAh1MIwM2BjIB9jMowSQah4hv5HrPpge9LCh1Dxs4vQKP1xhhAzYyTSPWD8QUktt80AAW/qmRXoZzOaBAL5wwKL2ABnmL0A3j5jyBx+gtXmUAlqZR00MAFeSBTM=
+  </data>
+ </layer>
+ <layer name="Tile Layer 3" width="20" height="20" opacity="0.26">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2DoAPaBdsAoGAWjAA4AHzAACA==
   </data>
  </layer>
 </map>
