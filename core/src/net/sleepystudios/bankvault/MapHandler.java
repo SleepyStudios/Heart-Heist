@@ -21,6 +21,8 @@ public class MapHandler {
 	public ArrayList<ProcObject> procObjs = new ArrayList<ProcObject>();
 	public ArrayList<Drone> drones = new ArrayList<Drone>();
 	
+	public int spawnX, spawnY;
+	
 	public MapHandler(TiledMap map) {
 		this.map = map;
 		mapRenderer = new OrthogonalTiledMapRenderer(map);
@@ -41,6 +43,13 @@ public class MapHandler {
                 	Object property = cell.getTile().getProperties().get("wall");
                     if(property != null){
                         rects.add(new Rectangle(x*s, y*s, s, s));
+                    } else {
+                    	property = cell.getTile().getProperties().get("spawn");
+                        if(property != null){
+                        	spawnX = x*s + getTileSize()/2;
+                        	spawnY = (y+2)*s;
+                        	rects.add(new Rectangle(x*s, y*s, s, s));
+                        }
                     }
                 }
             }
@@ -48,11 +57,11 @@ public class MapHandler {
 	}
 	
 	public void gen() {
-		int size[] = {30, 16, 5};
+		int size[] = {30, 16, 3};
 		
 		procObjs.clear();
 		
-		String decals[] = {"notes1", "notes2", "notes3", "coins1", "coins2", "coins3"};
+		String decals[] = {"notes1", "notes2", "notes3", "coins1", "coins2", "coins3", "vault"};
 		for(int i=0; i<size[0]; i++) {
 			procObjs.add(new DecalProcObject(decals[BankVault.rand(0, decals.length-1)], this));
 		}

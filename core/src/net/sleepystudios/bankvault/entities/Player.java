@@ -23,14 +23,15 @@ public class Player extends Entity {
 		OX = OY = 10;
 		
 		anim[IDLE] = new Animation(animSpeed, AnimGenerator.gen("shadow_idle.png", FW, FH));
-		anim[IDLE].setPlayMode(PlayMode.LOOP_PINGPONG);
 		anim[UP] = new Animation(animSpeed, AnimGenerator.gen("shadow_up.png", FW, FH));
 		anim[DOWN] = new Animation(animSpeed, AnimGenerator.gen("shadow_down.png", FW, FH));
 		anim[LEFT] = new Animation(animSpeed, AnimGenerator.gen("shadow_left.png", FW, FH));
 		anim[RIGHT] = new Animation(animSpeed, AnimGenerator.gen("shadow_right.png", FW, FH));
 		
-		x = 9*32;
-		y = mh.getHeight()-8*32;
+		for(int i=0; i<5; i++) anim[i].setPlayMode(PlayMode.LOOP_PINGPONG);
+		
+		x = mh.spawnX;
+		y = mh.spawnY;
 		
 		move(x, y);
 	}
@@ -40,31 +41,27 @@ public class Player extends Entity {
 		camera.position.set(shownCamX+=(camX-shownCamX)*0.08f, shownCamY+=(camY-shownCamY)*0.08f, 0);
 		
 		animTmr += Gdx.graphics.getDeltaTime();
-        batch.draw(anim[animIndex].getKeyFrame(animTmr, true), shownX+=(x-shownX)*0.1f, shownY+=(y-shownY)*0.1f);
+        batch.draw(anim[animIndex].getKeyFrame(animTmr, true), shownX+=(x-shownX)*0.2f, shownY+=(y-shownY)*0.2f);
 		
 		// movement
         if(!Gdx.input.isKeyPressed(Input.Keys.W) && !Gdx.input.isKeyPressed(Input.Keys.A) && !Gdx.input.isKeyPressed(Input.Keys.S) && !Gdx.input.isKeyPressed(Input.Keys.D)) {
-        	animIndex = IDLE;
+        	if(anim[animIndex].isAnimationFinished(animTmr)) animIndex = IDLE;
         }
         
-        tmrInput+=Gdx.graphics.getDeltaTime();
-        if(tmrInput>=0.1) {
-        	float speed = 32;//96f * Gdx.graphics.getDeltaTime();
-            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            	animIndex = UP;
-                if(!isBlocked(x, y+speed)) move(x, y + speed);
-            } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            	animIndex = LEFT;
-            	if(!isBlocked(x-speed, y)) move(x - speed, y);
-            } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            	animIndex = DOWN;
-            	if(!isBlocked(x, y-speed)) move(x, y - speed);
-            } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            	animIndex = RIGHT;
-            	if(!isBlocked(x+speed, y)) move(x + speed, y);
-            }
-            
-            tmrInput=0;
+    	float speed = 150f * Gdx.graphics.getDeltaTime();
+    	
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+        	animIndex = UP;
+            if(!isBlocked(x, y+speed)) move(x, y + speed);
+        } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+        	animIndex = LEFT;
+        	if(!isBlocked(x-speed, y)) move(x - speed, y);
+        } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+        	animIndex = DOWN;
+        	if(!isBlocked(x, y-speed)) move(x, y - speed);
+        } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+        	animIndex = RIGHT;
+        	if(!isBlocked(x+speed, y)) move(x + speed, y);
         }
 	}
 	

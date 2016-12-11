@@ -7,7 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -38,13 +38,16 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
         float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 		camera = new OrthographicCamera(w, h);
+		camera.zoom = 0.5f;
 		
 		TmxMapLoader loader = new TmxMapLoader();
 		Parameters params = new Parameters();
 		params.textureMinFilter = TextureFilter.Linear;
 		params.textureMagFilter = TextureFilter.Nearest;
+		params.flipY = true;
 
-		mh = new MapHandler(loader.load("map.tmx", params));
+		int room = rand(1, 1);
+		mh = new MapHandler(loader.load("room" + room + ".tmx", params));
 		p = new Player(camera, mh);
 		sr = new ShapeRenderer();
 		
@@ -53,8 +56,8 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
 		
 		camera.update();
 		mh.render(camera);
@@ -158,4 +161,9 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
         float r = rand(min, max);
         return r != 0 ? r : randNoZero(min, max);
     }
+    
+    public static int snap(float num) {
+		int s = 32;
+		return Math.round(num/s) * s;
+	}
 }

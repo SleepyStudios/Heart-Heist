@@ -23,8 +23,8 @@ public class Drone extends Entity {
 		anim = new Animation(animSpeed, AnimGenerator.gen("drone.png", FW, FH));
 		
 		while(isBlocked(x, y)) {
-			x = snap(BankVault.rand(0, mh.getWidth()-FW));
-			y = snap(BankVault.rand(0, mh.getHeight()-FH));
+			x = BankVault.snap(BankVault.rand(0, mh.getWidth()-FW));
+			y = BankVault.snap(BankVault.rand(0, mh.getHeight()-FH));
 		}
 		dir = BankVault.rand(0, 3);
 		move(x, y);
@@ -104,10 +104,5 @@ public class Drone extends Entity {
 	private void setDestination() {
 		dir = BankVault.rand(0, 3);
 		angle = dir*90f;
-	}
-	
-	private int snap(float num) {
-		int s = mh.getTileSize();
-		return Math.round(num/s) * s;
 	}
 }

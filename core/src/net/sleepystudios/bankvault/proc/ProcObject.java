@@ -26,8 +26,8 @@ public class ProcObject {
 		float x=-1, y=-1;
 		
 		while((x==-1 && y==-1) || overlaps(x, y)) {
-			x = snap(BankVault.rand(0, mh.getWidth()-sprite.getWidth()));
-			y = snap(BankVault.rand(0, mh.getHeight()-sprite.getHeight()));
+			x = BankVault.snap(BankVault.rand(0, mh.getWidth()-sprite.getWidth()));
+			y = BankVault.snap(BankVault.rand(0, mh.getHeight()-sprite.getHeight()));
 		}
 		
 		rect = new Rectangle(x, y, sprite.getWidth(), sprite.getHeight());
@@ -50,10 +50,5 @@ public class ProcObject {
 	
 	public void render(SpriteBatch batch) {
 		sprite.draw(batch);
-	}
-	
-	private int snap(float num) {
-		int s = mh.getTileSize();
-		return Math.round(num/s) * s;
 	}
 }
