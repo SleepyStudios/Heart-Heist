@@ -1,27 +1,30 @@
 package net.sleepystudios.bankvault.entities;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import net.sleepystudios.bankvault.AnimGenerator;
 import net.sleepystudios.bankvault.BankVault;
 import net.sleepystudios.bankvault.MapHandler;
 
 public class Drone extends Entity {
 	public float angle, shownAngle;
 	public int dir;
+	Animation anim;
 		
 	public Drone(MapHandler mh) {
 		super(mh);
 		
 		OX = OY = 6;
+		FW = 24;
+		FH = 22;
 		
-		sprite = new Sprite(new Texture("drone.png"));
+		anim = new Animation(animSpeed, AnimGenerator.gen("drone.png", FW, FH));
 		
 		while(isBlocked(x, y)) {
-			x = snap(BankVault.rand(0, mh.getWidth()-sprite.getWidth()));
-			y = snap(BankVault.rand(0, mh.getHeight()-sprite.getHeight()));
+			x = snap(BankVault.rand(0, mh.getWidth()-FW));
+			y = snap(BankVault.rand(0, mh.getHeight()-FH));
 		}
 		dir = BankVault.rand(0, 3);
 		move(x, y);
@@ -30,10 +33,10 @@ public class Drone extends Entity {
 	}
 	
 	public void render(SpriteBatch batch) {
-		shownAngle += (angle - shownAngle) * 0.1f;
+		shownAngle += (angle - shownAngle) * 0.15f;
 		
-		sprite.setRotation(shownAngle);
-		sprite.draw(batch);
+		animTmr+=Gdx.graphics.getDeltaTime();
+		batch.draw(anim.getKeyFrame(animTmr), x, y, FW/2, FH/2, FW, FH, 1f, 1f, shownAngle-90f);
 		
         update();
 	}

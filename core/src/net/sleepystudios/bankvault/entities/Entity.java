@@ -1,6 +1,5 @@
 package net.sleepystudios.bankvault.entities;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -10,8 +9,8 @@ import net.sleepystudios.bankvault.proc.ProcObject;
 public class Entity {
 	protected MapHandler mh;
 	float x, y;
-	Sprite sprite;
 	public Rectangle box;
+	float animSpeed = 0.125f, animTmr;
 	
 	public Entity(MapHandler mh) {
 		this.mh = mh;
@@ -37,7 +36,6 @@ public class Entity {
 		
 		this.x = x; 
 		this.y = y;
-		sprite.setPosition(x, y);
 	}
 	
 	int OX = 0, OY = 0, FW = 32, FH = 32;

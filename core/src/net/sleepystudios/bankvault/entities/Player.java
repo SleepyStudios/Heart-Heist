@@ -3,10 +3,8 @@ package net.sleepystudios.bankvault.entities;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import net.sleepystudios.bankvault.AnimGenerator;
@@ -17,15 +15,12 @@ public class Player extends Entity {
 	final int IDLE = 0, UP = 1, DOWN = 2, LEFT = 3, RIGHT = 4;
 	Animation anim[] = new Animation[5];
 	int animIndex;
-	float animSpeed = 0.1f, animTmr;
 	
 	public Player(OrthographicCamera camera, MapHandler mh) {
 		super(mh);
 		this.camera = camera;
 		
 		OX = OY = 10;
-		
-		sprite = new Sprite(new Texture("player.png"));
 		
 		anim[IDLE] = new Animation(animSpeed, AnimGenerator.gen("shadow_idle.png", FW, FH));
 		anim[IDLE].setPlayMode(PlayMode.LOOP_PINGPONG);
@@ -40,30 +35,36 @@ public class Player extends Entity {
 		move(x, y);
 	}
 	
+	float shownX, shownY, tmrInput;
 	public void render(SpriteBatch batch) {
-		//sprite.draw(batch);
+		camera.position.set(shownCamX+=(camX-shownCamX)*0.08f, shownCamY+=(camY-shownCamY)*0.08f, 0);
 		
 		animTmr += Gdx.graphics.getDeltaTime();
-        batch.draw(anim[animIndex].getKeyFrame(animTmr, true), x, y);
+        batch.draw(anim[animIndex].getKeyFrame(animTmr, true), shownX+=(x-shownX)*0.1f, shownY+=(y-shownY)*0.1f);
 		
 		// movement
         if(!Gdx.input.isKeyPressed(Input.Keys.W) && !Gdx.input.isKeyPressed(Input.Keys.A) && !Gdx.input.isKeyPressed(Input.Keys.S) && !Gdx.input.isKeyPressed(Input.Keys.D)) {
         	animIndex = IDLE;
         }
         
-		float speed = 120f * Gdx.graphics.getDeltaTime();
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-        	animIndex = UP;
-            if(!isBlocked(x, y+speed)) move(x, y + speed);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-        	animIndex = LEFT;
-        	if(!isBlocked(x-speed, y)) move(x - speed, y);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-        	animIndex = DOWN;
-        	if(!isBlocked(x, y-speed)) move(x, y - speed);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-        	animIndex = RIGHT;
-        	if(!isBlocked(x+speed, y)) move(x + speed, y);
+        tmrInput+=Gdx.graphics.getDeltaTime();
+        if(tmrInput>=0.1) {
+        	float speed = 32;//96f * Gdx.graphics.getDeltaTime();
+            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            	animIndex = UP;
+                if(!isBlocked(x, y+speed)) move(x, y + speed);
+            } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            	animIndex = LEFT;
+            	if(!isBlocked(x-speed, y)) move(x - speed, y);
+            } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            	animIndex = DOWN;
+            	if(!isBlocked(x, y-speed)) move(x, y - speed);
+            } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            	animIndex = RIGHT;
+            	if(!isBlocked(x+speed, y)) move(x + speed, y);
+            }
+            
+            tmrInput=0;
         }
 	}
 	
@@ -73,6 +74,8 @@ public class Player extends Entity {
 		updateCam();
 	}
 	
+	float shownCamX, shownCamY, camX, camY;
+	boolean firstUpdate;
 	private void updateCam() {
     	// get the map properties to find the height/width, etc
     	int mapPixelWidth = mh.getWidth();
@@ -83,6 +86,15 @@ public class Player extends Entity {
         float minCameraY = camera.zoom * (camera.viewportHeight / 2);
         float maxCameraY = (mapPixelHeight) - minCameraY;
         
-        camera.position.set(Math.min(maxCameraX, Math.max(x, minCameraX)), Math.min(maxCameraY, Math.max(y, minCameraY)), 0);
+        camX = (int) Math.min(maxCameraX, Math.max(x, minCameraX));
+        camY = (int) Math.min(maxCameraY, Math.max(y, minCameraY));
+        
+        if(!firstUpdate) {
+            shownCamX = camX;
+        	shownCamY = camY;
+        	camera.position.set(shownCamX, shownCamY, 0);
+        	
+        	firstUpdate = true;
+        }
     }
 }

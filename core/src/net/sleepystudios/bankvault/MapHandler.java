@@ -48,7 +48,7 @@ public class MapHandler {
 	}
 	
 	public void gen() {
-		int size[] = {30, 16, 0};
+		int size[] = {30, 16, 5};
 		
 		procObjs.clear();
 		
