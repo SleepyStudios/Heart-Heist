@@ -20,7 +20,7 @@ public class BankVault extends ApplicationAdapter {
         float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 		camera = new OrthographicCamera(w, h);
-		mh = new MapHandler(new TmxMapLoader().load("map/map.tmx"));
+		mh = new MapHandler(new TmxMapLoader().load("map.tmx"));
 	}
 
 	@Override
