@@ -25,8 +25,8 @@ public class ProcObject {
 		float x=-1, y=-1;
 		
 		while((x==-1 && y==-1) || overlaps(x, y)) {
-			x = snap(BankVault.rand(0, mh.getWidth()));
-			y = snap(BankVault.rand(0, mh.getHeight()));
+			x = snap(BankVault.rand(0, mh.getWidth()-sprite.getWidth()));
+			y = snap(BankVault.rand(0, mh.getHeight()-sprite.getHeight()));
 		}
 		
 		rect = new Rectangle(x, y, sprite.getWidth(), sprite.getHeight());
@@ -37,11 +37,11 @@ public class ProcObject {
 		Rectangle procRect = new Rectangle(x, y, sprite.getWidth(), sprite.getHeight());
 		
 		for(Rectangle r : mh.rects) {
-			if(Intersector.overlaps(procRect, r)) return false;
+			if(Intersector.overlaps(procRect, r)) return true;
 		}
 		
 		for(ProcObject o : mh.procObjs) {
-			if(o.rect!=null && Intersector.overlaps(procRect, o.rect)) return false;
+			if(o.rect!=null && Intersector.overlaps(procRect, o.rect)) return true;
 		}
 		
 		return false;

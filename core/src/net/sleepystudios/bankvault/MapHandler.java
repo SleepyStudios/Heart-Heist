@@ -25,15 +25,7 @@ public class MapHandler {
 		mapRenderer = new OrthogonalTiledMapRenderer(map);
 		
 		loadRects();
-		
-		int size = 10;
-		for(int i=0; i<size; i++) {
-			if(BankVault.rand(0,1)==0) {
-				procObjs.add(new Crate(this));
-			} else {
-				procObjs.add(new Junk(this));
-			}
-		}
+		gen();
 	}
 	
 	private void loadRects() {
@@ -49,6 +41,19 @@ public class MapHandler {
                 }
             }
         }
+	}
+	
+	public void gen() {
+		int size = 10;
+		
+		procObjs.clear();
+		for(int i=0; i<size; i++) {
+			if(BankVault.rand(0,1)==0) {
+				procObjs.add(new Crate(this));
+			} else {
+				procObjs.add(new Junk(this));
+			}
+		}
 	}
 	
 	public void render(OrthographicCamera camera) {
