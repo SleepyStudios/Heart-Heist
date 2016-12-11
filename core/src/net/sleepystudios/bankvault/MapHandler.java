@@ -9,17 +9,31 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 
+import net.sleepystudios.bankvault.proc.Crate;
+import net.sleepystudios.bankvault.proc.Junk;
+import net.sleepystudios.bankvault.proc.ProcObject;
+
 public class MapHandler {
 	public TiledMap map; 
 	private TiledMapRenderer mapRenderer;
 	private int[] layers = {0}, fringeLayers = {3};
 	public ArrayList<Rectangle> rects = new ArrayList<Rectangle>();
+	public ArrayList<ProcObject> procObjs = new ArrayList<ProcObject>();
 	
 	public MapHandler(TiledMap map) {
 		this.map = map;
 		mapRenderer = new OrthogonalTiledMapRenderer(map);
 		
 		loadRects();
+		
+		int size = 10;
+		for(int i=0; i<size; i++) {
+			if(BankVault.rand(0,1)==0) {
+				procObjs.add(new Crate(this));
+			} else {
+				procObjs.add(new Junk(this));
+			}
+		}
 	}
 	
 	private void loadRects() {

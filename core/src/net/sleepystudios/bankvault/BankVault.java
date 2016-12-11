@@ -1,5 +1,7 @@
 package net.sleepystudios.bankvault;
 
+import java.util.Random;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -12,6 +14,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
+
+import net.sleepystudios.bankvault.proc.ProcObject;
 
 public class BankVault extends ApplicationAdapter implements InputProcessor {
 	SpriteBatch batch;
@@ -47,9 +51,11 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		
-		if(showHitBoxes) renderBoxes();
-		
 		p.render(batch);
+		
+		for(ProcObject o : mh.procObjs) o.render(batch);
+		
+		if(showHitBoxes) renderBoxes();
 		
 		batch.end();
 	}
@@ -61,10 +67,8 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 		sr.begin(ShapeType.Line);
 		sr.setColor(Color.RED);
 		
-		for(Rectangle r : mh.rects) {
-			sr.rect(r.x, r.y, r.width, r.height);
-		}
-		
+		for(Rectangle r : mh.rects) sr.rect(r.x, r.y, r.width, r.height);
+		for(ProcObject o : mh.procObjs) sr.rect(o.rect.x, o.rect.y, o.rect.width, o.rect.height);
 		sr.rect(p.box.x, p.box.y, 32, 32);
 		
 		sr.end();
@@ -117,4 +121,22 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 	public boolean scrolled(int amount) {
 		return false;
 	}
+	
+	// generates a random number
+    public static int rand(int min, int max) {
+        return min + (int) (Math.random() * ((max - min) + 1));
+    }
+    public static float rand(float min, float max) {
+        return min + new Random().nextFloat() * (max - min);
+    }
+
+    // random number that cannot be 0
+    public static int randNoZero(int min, int max) {
+        int r = rand(min, max);
+        return r != 0 ? r : randNoZero(min, max);
+    }
+    public static float randNoZero(float min, float max) {
+        float r = rand(min, max);
+        return r != 0 ? r : randNoZero(min, max);
+    }
 }

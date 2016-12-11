@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 
+import net.sleepystudios.bankvault.proc.ProcObject;
+
 public class Player {
 	float x, y;
 	OrthographicCamera camera;
@@ -28,7 +30,7 @@ public class Player {
 		sprite.draw(batch);
 		
 		// movement
-		float speed = 100f * Gdx.graphics.getDeltaTime();
+		float speed = 120f * Gdx.graphics.getDeltaTime();
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             if(!isBlocked(x, y+speed)) move(x, y + speed);
         }
@@ -49,6 +51,10 @@ public class Player {
 		
 		for(Rectangle r : mh.rects) {
 			if(Intersector.overlaps(box, r)) return true;
+		}
+		
+		for(ProcObject o : mh.procObjs) {
+			if(o.rect!=null && Intersector.overlaps(box, o.rect)) return true;
 		}
 		
 		return false;
