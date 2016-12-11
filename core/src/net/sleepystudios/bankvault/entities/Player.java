@@ -30,8 +30,9 @@ public class Player extends Entity {
 		
 		for(int i=0; i<5; i++) anim[i].setPlayMode(PlayMode.LOOP_PINGPONG);
 		
-		x = mh.spawnX;
+		shownX = x = mh.spawnX+1;
 		y = mh.spawnY;
+		shownY = y - mh.getTileSize()*4;
 		
 		move(x, y);
 	}

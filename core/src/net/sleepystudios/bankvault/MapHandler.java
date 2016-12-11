@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 import net.sleepystudios.bankvault.entities.Drone;
 import net.sleepystudios.bankvault.proc.DecalProcObject;
+import net.sleepystudios.bankvault.proc.HiddenProcObject;
 import net.sleepystudios.bankvault.proc.ProcObject;
 
 public class MapHandler {
@@ -62,6 +63,7 @@ public class MapHandler {
 		procObjs.clear();
 		
 		String decals[] = {"notes1", "notes2", "notes3", "coins1", "coins2", "coins3", "vault"};
+		procObjs.add(new HiddenProcObject(this));
 		for(int i=0; i<size[0]; i++) {
 			procObjs.add(new DecalProcObject(decals[BankVault.rand(0, decals.length-1)], this));
 		}

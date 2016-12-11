@@ -44,7 +44,6 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 		Parameters params = new Parameters();
 		params.textureMinFilter = TextureFilter.Linear;
 		params.textureMagFilter = TextureFilter.Nearest;
-		params.flipY = true;
 
 		int room = rand(1, 1);
 		mh = new MapHandler(loader.load("room" + room + ".tmx", params));

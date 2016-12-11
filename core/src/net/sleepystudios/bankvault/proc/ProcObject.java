@@ -22,7 +22,7 @@ public class ProcObject {
 		gen();
 	}
 	
-	private void gen() {
+	protected void gen() {
 		float x=-1, y=-1;
 		
 		while((x==-1 && y==-1) || overlaps(x, y)) {
