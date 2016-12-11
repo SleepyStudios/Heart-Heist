@@ -17,6 +17,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 import net.sleepystudios.bankvault.entities.Drone;
 import net.sleepystudios.bankvault.entities.Player;
+import net.sleepystudios.bankvault.proc.DecalProcObject;
 import net.sleepystudios.bankvault.proc.ProcObject;
 
 public class BankVault extends ApplicationAdapter implements InputProcessor {
@@ -25,7 +26,7 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 	MapHandler mh;
 	Player p;
 	ShapeRenderer sr;
-	boolean showHitBoxes = true;
+	boolean showHitBoxes;
 	
 	@Override
 	public void create () {
@@ -53,11 +54,13 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		
+		for(ProcObject o : mh.procObjs) if(o instanceof DecalProcObject) o.render(batch);
+		
 		p.render(batch);
 		
 		for(Drone d : mh.drones) d.render(batch);
 		
-		for(ProcObject o : mh.procObjs) o.render(batch);
+		for(ProcObject o : mh.procObjs) if(!(o instanceof DecalProcObject)) o.render(batch);
 		
 		if(showHitBoxes) renderBoxes();
 		
@@ -76,7 +79,7 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 		for(Rectangle r : mh.rects) sr.rect(r.x, r.y, r.width, r.height);
 		for(ProcObject o : mh.procObjs) sr.rect(o.rect.x, o.rect.y, o.rect.width, o.rect.height);
 		for(Drone d : mh.drones) sr.rect(d.box.x, d.box.y, d.box.width, d.box.height);
-		sr.rect(p.box.x, p.box.y, 32, 32);
+		sr.rect(p.box.x, p.box.y, p.box.width, p.box.height);
 		
 		sr.end();
 		

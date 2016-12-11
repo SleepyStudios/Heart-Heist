@@ -13,7 +13,7 @@ public class ProcObject {
 	Sprite sprite;
 	MapHandler mh;
 	public Rectangle rect = null;
-	public boolean hasCollision;
+	public boolean hasCollision = true;
 	
 	public ProcObject(String name, MapHandler mh) {
 		sprite = new Sprite(new Texture(name + ".png"));

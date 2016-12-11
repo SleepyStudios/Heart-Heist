@@ -48,7 +48,7 @@ public class MapHandler {
 	}
 	
 	public void gen() {
-		int size[] = {10, 6, 3};
+		int size[] = {30, 16, 0};
 		
 		procObjs.clear();
 		
@@ -63,7 +63,7 @@ public class MapHandler {
 		}
 		
 		drones.clear();
-		for(int i=0; i<size[1]; i++) {
+		for(int i=0; i<size[2]; i++) {
 			drones.add(new Drone(this));
 		}
 	}

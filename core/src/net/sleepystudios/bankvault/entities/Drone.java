@@ -15,10 +15,7 @@ public class Drone extends Entity {
 	public Drone(MapHandler mh) {
 		super(mh);
 		
-		FW = 32;
-		FH = 32;
-		OX = 6;
-		OY = 6;
+		OX = OY = 6;
 		
 		sprite = new Sprite(new Texture("drone.png"));
 		

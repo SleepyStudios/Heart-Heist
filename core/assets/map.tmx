@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="32" tileheight="32" nextobjectid="1">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="40" height="23" tilewidth="32" tileheight="32" nextobjectid="1">
  <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="32" tilecount="36" columns="4">
   <image source="tileset.png" width="128" height="288"/>
   <tile id="7">
@@ -28,19 +28,19 @@
    </properties>
   </tile>
  </tileset>
- <layer name="Tile Layer 1" width="20" height="20">
+ <layer name="Tile Layer 1" width="40" height="23">
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYBzFo3gUj+JRPIpJxADrnAGR
+   eJztw0ENAAAMA6Grf9MTsS8krJqqqqo+H+uHA5k=
   </data>
  </layer>
- <layer name="Tile Layer 2" width="20" height="20">
+ <layer name="Tile Layer 2" width="40" height="23">
   <data encoding="base64" compression="zlib">
-   eJzjYGBg4CCAhYFYhAh1MEwtMNDmEfIbue7DpWewmIfPHkJ2octzAjEXheYhq+EFYj4yzMPnRkLq8QE2EuyhJH4Hs3mE7KGVeZSWP7Q2j1JAK/OoiQEyOAPc
+   eJztlksOgCAMRFmiiW70/me1S0MgTOtU6meSWVHaBymfnFLKHW/iHYjzMlus/G/jQ/eetW5rnt6c6HwsefVfq472fCI9VI5P4jkY3zlmEa9KPqtQ/rv6rVXfOs+b++e7ppG9hWgEn+ZtLmNY/xv0TvDk097r2vw1PlQow9P4aoxIHYusfIwajJxf4ovsA8Y+B8Y=
   </data>
  </layer>
- <layer name="Tile Layer 3" width="20" height="20" opacity="0.44">
+ <layer name="Tile Layer 3" width="40" height="23" opacity="0.44">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo4B2gAWKB6t5o2AUjALyAQBBoAAR
+   eJztzrEJAAAMw7BA//+5S39oBgm8OwHoMFer9j8AgG8LgEgADQ==
   </data>
  </layer>
 </map>
