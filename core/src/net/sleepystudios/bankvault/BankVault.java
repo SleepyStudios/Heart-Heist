@@ -55,9 +55,9 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 		
 		p.render(batch);
 		
-		for(ProcObject o : mh.procObjs) o.render(batch);
-		
 		for(Drone d : mh.drones) d.render(batch);
+		
+		for(ProcObject o : mh.procObjs) o.render(batch);
 		
 		if(showHitBoxes) renderBoxes();
 		

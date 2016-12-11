@@ -10,7 +10,7 @@ import net.sleepystudios.bankvault.BankVault;
 import net.sleepystudios.bankvault.MapHandler;
 
 public class Drone extends Entity {
-	public float x, y, rad, shownAngle;
+	public float rad, shownAngle;
 	public float dx, dy;
 	
 	public Drone(MapHandler mh) {
@@ -18,8 +18,8 @@ public class Drone extends Entity {
 		
 		FW = 32;
 		FH = 32;
-		OX = 6;
-		OY = 6;
+		OX = 12;
+		OY = 12;
 		
 		sprite = new Sprite(new Texture("drone.png"));
 		
@@ -47,24 +47,21 @@ public class Drone extends Entity {
 		if(changeDest) {
 			tmrChangeDir+=Gdx.graphics.getDeltaTime();
 			if(tmrChangeDir>=1) {
+				setDestination();
 				changeDest = false;
 				tmrChangeDir = 0;
 			} else if((int) tmrChangeDir==0 || (int) tmrChangeDir==2) {
 				rad += BankVault.rand(-0.2f, 0.2f);
 			}
-			System.out.println("changing");
 		}
 		
 		tmrMove+=Gdx.graphics.getDeltaTime();
 		if(tmrMove>=0.01f && !changeDest) {
-	        x+=dx;
-	        y-=dy;
-	        
-	        //if(!isBlocked(x+dx, y-dy)) {
+	        if(!isBlocked(x+dx, y-dy)) {
 	        	move(x+dx, y-dy);
-	        //} else {
-	        //	changeDest = true;
-	        //}
+	        } else {
+	        	changeDest = true;
+	        }
 	        
 			// need to change?
 	        if(!changeDest) {
