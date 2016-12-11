@@ -26,7 +26,7 @@ public class Entity {
 		}
 		
 		for(ProcObject o : mh.procObjs) {
-			if(o.rect!=null && Intersector.overlaps(box, o.rect)) return true;
+			if(o.rect!=null && o.hasCollision && Intersector.overlaps(box, o.rect)) return true;
 		}
 		
 		return false;

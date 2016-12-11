@@ -10,8 +10,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 
 import net.sleepystudios.bankvault.entities.Drone;
-import net.sleepystudios.bankvault.proc.BarStack;
-import net.sleepystudios.bankvault.proc.Shelf;
+import net.sleepystudios.bankvault.proc.DecalProcObject;
 import net.sleepystudios.bankvault.proc.ProcObject;
 
 public class MapHandler {
@@ -49,15 +48,18 @@ public class MapHandler {
 	}
 	
 	public void gen() {
-		int size[] = {10, 3};
+		int size[] = {10, 6, 3};
 		
 		procObjs.clear();
+		
+		String decals[] = {"notes1", "notes2", "notes3", "coins1", "coins2", "coins3"};
 		for(int i=0; i<size[0]; i++) {
-			if(BankVault.rand(0,1)==0) {
-				procObjs.add(new BarStack(this));
-			} else {
-				procObjs.add(new Shelf(this));
-			}
+			procObjs.add(new DecalProcObject(decals[BankVault.rand(0, decals.length-1)], this));
+		}
+		
+		String objs[] = {"barstack", "shelf"};
+		for(int i=0; i<size[1]; i++) {
+			procObjs.add(new ProcObject(objs[BankVault.rand(0, objs.length-1)], this));
 		}
 		
 		drones.clear();
