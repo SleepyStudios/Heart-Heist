@@ -103,13 +103,14 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 
 	@Override
 	public boolean keyDown(int keycode) {
+		if(keycode==Input.Keys.SPACE) p.goShadow();
 		return false;
 	}
 
 	@Override
 	public boolean keyUp(int keycode) {
 		if(keycode==Input.Keys.B) showHitBoxes = !showHitBoxes;
-		if(keycode==Input.Keys.SPACE) mh.gen();
+		if(keycode==Input.Keys.K) mh.gen();
 		return false;
 	}
 

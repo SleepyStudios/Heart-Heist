@@ -41,8 +41,8 @@
  <tileset firstgid="37" name="shadow" tilewidth="32" tileheight="32" tilecount="1" columns="1">
   <image source="shadow.png" width="32" height="32"/>
  </tileset>
- <tileset firstgid="38" name="shaodwcorner" tilewidth="32" tileheight="32" tilecount="1" columns="1">
-  <image source="shaodwcorner.png" width="32" height="32"/>
+ <tileset firstgid="38" name="shadowcorner" tilewidth="32" tileheight="32" tilecount="1" columns="1">
+  <image source="shadowcorner.png" width="32" height="32"/>
  </tileset>
  <tileset firstgid="39" name="shadowcorner2" tilewidth="32" tileheight="32" tilecount="1" columns="1">
   <image source="shadowcorner2.png" width="32" height="32"/>
@@ -57,7 +57,7 @@
    eJztlEsOgCAMRGfJXu9/Fo+mB4Do2Bdtk07SBYQMj34YkkbyWMk583Sf8G6+5svA97eq8ZF/FOFVLX/Z5NRstr6rS8TL7Skyzy7fG8+InDsJPvfdX/O5cvmy9x8xvzMGan6jWvERvs0X863AR8UuHdsVpOcJcNoK2A==
   </data>
  </layer>
- <layer name="Shadows" width="40" height="23" opacity="0.44">
+ <layer name="Shadows" width="40" height="23" opacity="0.27">
   <data encoding="base64" compression="zlib">
    eJztVdsNwyAMZBnMWhmto3S00g9U1/L5lSBFai2hyI9cDh8mrd3fRmtHn0++RrKG51G8ij39Q3KesUdL1PA8il+B/ef3G/xo5vl5JVkgaigQz2BLfrPm2U8sYnu8Akvykz3PGtK3iqX076vn2YX0rWJxfsPRjICv1Vu5DNYIaLA0W3uRvqfLGayIIUykHzm5Kj/t/2dhcrNmlYx7zdur9/+1MLUceM/l533zbd58OP2Ds2rdu33jfGiY3v2M9rpjPjRM3lsrv2M+lobS5+dY48dxI1jV+bBMO5vRGYjgXoWzkx+a38gaHy3NWBX37vYCFXDhIw==
   </data>

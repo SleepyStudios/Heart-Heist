@@ -12,8 +12,8 @@ import net.sleepystudios.bankvault.MapHandler;
 
 public class Player extends Entity {
 	OrthographicCamera camera;
-	final int IDLE = 0, UP = 1, DOWN = 2, LEFT = 3, RIGHT = 4;
-	Animation anim[] = new Animation[5];
+	final int IDLE = 0, UP = 1, DOWN = 2, LEFT = 3, RIGHT = 4, SHADOW = 5;
+	Animation anim[] = new Animation[6];
 	int animIndex;
 	
 	public Player(OrthographicCamera camera, MapHandler mh) {
@@ -27,8 +27,9 @@ public class Player extends Entity {
 		anim[DOWN] = new Animation(animSpeed, AnimGenerator.gen("shadow_down.png", FW, FH));
 		anim[LEFT] = new Animation(animSpeed, AnimGenerator.gen("shadow_left.png", FW, FH));
 		anim[RIGHT] = new Animation(animSpeed, AnimGenerator.gen("shadow_right.png", FW, FH));
+		anim[SHADOW] = new Animation(animSpeed, AnimGenerator.gen("shadow_move.png", FW, FH));
 		
-		for(int i=0; i<5; i++) anim[i].setPlayMode(PlayMode.LOOP_PINGPONG);
+		for(int i=0; i<anim.length-1; i++) anim[i].setPlayMode(PlayMode.LOOP_PINGPONG);
 		
 		shownX = x = mh.spawnX+1;
 		y = mh.spawnY;
@@ -37,16 +38,46 @@ public class Player extends Entity {
 		move(x, y);
 	}
 	
-	float shownX, shownY, tmrInput;
+	float shownX, shownY, tmrShadow, tmrCanShadow;
+	boolean reversed, canShadow = true;
 	public void render(SpriteBatch batch) {
 		camera.position.set(shownCamX+=(camX-shownCamX)*0.08f, shownCamY+=(camY-shownCamY)*0.08f, 0);
 		
 		animTmr += Gdx.graphics.getDeltaTime();
-        batch.draw(anim[animIndex].getKeyFrame(animTmr, true), shownX+=(x-shownX)*0.2f, shownY+=(y-shownY)*0.2f);
 		
+        batch.draw(anim[animIndex].getKeyFrame(animTmr, animIndex<=RIGHT), shownX+=(x-shownX)*0.2f, shownY+=(y-shownY)*0.2f);
+	
+        // shadow form
+        if(animIndex==SHADOW) {
+        	tmrShadow+=Gdx.graphics.getDeltaTime();
+        	if(tmrShadow>=3) {
+        		if(!reversed) {
+        			animTmr = 0;
+        			reversed = true;
+        		} else {
+        			if(animTmr>=animSpeed) {
+        				animTmr = 0;
+                    	animIndex = IDLE;
+                    	reversed = false;
+                    	tmrShadow = 0;
+        			}
+        		}
+            }
+        } else {
+        	tmrShadow = 0;
+        	
+        	if(!canShadow) {
+            	tmrCanShadow+=Gdx.graphics.getDeltaTime();
+            	if(tmrCanShadow>=5) {
+            		canShadow = true;
+            		tmrCanShadow = 0;
+            	}
+            }
+        }
+        
 		// movement
         if(!Gdx.input.isKeyPressed(Input.Keys.W) && !Gdx.input.isKeyPressed(Input.Keys.A) && !Gdx.input.isKeyPressed(Input.Keys.S) && !Gdx.input.isKeyPressed(Input.Keys.D)) {
-        	if(anim[animIndex].isAnimationFinished(animTmr)) animIndex = IDLE;
+        	if(animIndex!=SHADOW) animIndex = IDLE;
         }
         
     	float speed = 150f * Gdx.graphics.getDeltaTime();
@@ -64,6 +95,14 @@ public class Player extends Entity {
         	animIndex = RIGHT;
         	if(!isBlocked(x+speed, y)) move(x + speed, y);
         }
+	}
+
+	public void goShadow() {
+		if(animIndex==SHADOW || !canShadow) return;
+		
+		animTmr = 0;
+		animIndex = SHADOW;
+		canShadow = false;
 	}
 	
 	@Override

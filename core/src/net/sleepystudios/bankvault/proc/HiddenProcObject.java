@@ -17,6 +17,6 @@ public class HiddenProcObject extends ProcObject {
 		
 		rect = new Rectangle(x, y, sprite.getWidth(), sprite.getHeight());
 		sprite.setPosition(x, y);
-		sprite.setAlpha(0.1f);
+		sprite.setAlpha(0f);
 	}
 }
