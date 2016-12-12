@@ -70,13 +70,13 @@ public class MapHandler {
 		
 		procObjs.add(new Heart(this));
 		
-		String decals[] = {"notes1", "notes2", "notes3", "coins1", "coins2", "coins3", "vault"};
+		String decals[] = {"notes1", "notes2", "notes3", "coins1", "coins2", "coins3"};
 		procObjs.add(new HiddenProcObject(this));
 		for(int i=0; i<size[0]; i++) {
 			procObjs.add(new DecalProcObject(decals[BankVault.rand(0, decals.length-1)], this));
 		}
 		
-		String objs[] = {"barstack", "shelf"};
+		String objs[] = {"barstack", "shelf", "vault2"};
 		for(int i=0; i<size[1]; i++) {
 			procObjs.add(new ProcObject(objs[BankVault.rand(0, objs.length-1)], this));
 		}
@@ -96,16 +96,20 @@ public class MapHandler {
 		tracers.clear();
 		BankVault.actionMessages.clear();
 		messageNum = 0;
+		obDone = false;
 	}
 	
 	int messageNum = 0; float tmrMessages;
+	boolean obDone;
 	public void render(OrthographicCamera camera) {
 		mapRenderer.setView(camera);
         mapRenderer.render(layers);
         
         tmrMessages+=Gdx.graphics.getDeltaTime();
-        if(tmrMessages>=2) {
-        	if(messageNum<4) messageNum++;
+        int time=2;
+        if(messageNum==3) time = 5;
+        if(tmrMessages>=time) {
+        	if(messageNum<5) messageNum++;
         	tmrMessages = 0;
         }
         
@@ -118,8 +122,12 @@ public class MapHandler {
         if(messageNum==2) {
         	addActionMessage("Avoid drones and cameras", 12, Color.WHITE);
         }
-        if(messageNum==3) {
+        if(messageNum==3 && !obDone) {
         	addActionMessage("Find your heart", 12, Color.WHITE);
+        	obDone = true;
+        }
+        if(messageNum==4) {
+        	addActionMessage("Press R to restart anytime", 12, Color.WHITE);
         }
 	}
 	
