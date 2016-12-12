@@ -86,7 +86,7 @@ public class Drone extends Entity {
 			}
 			
 			tmrSpot+=Gdx.graphics.getDeltaTime();
-			if(tmrSpot>=0.2) {
+			if(tmrSpot>=0.1) {
 				if(me.dst(player)<maxRange) {
 					float yd = y - mh.p.y;
 					float xd = x - mh.p.x;
@@ -95,12 +95,10 @@ public class Drone extends Entity {
 				}
 			}
 			
-			if(Intersector.overlapConvexPolygons(vision, boxToPoly(mh.p.box, false)) && mh.p.animIndex!=mh.p.SHADOW) {
-				//BankVault.end = true;
-				
+			if(castRay(me, player, mh.p) && Intersector.overlapConvexPolygons(vision, boxToPoly(mh.p.box, false)) && mh.p.animIndex!=mh.p.SHADOW) {
 				tmrShoot+=Gdx.graphics.getDeltaTime();
 				if(tmrShoot>=0.25) {
-					mh.bullets.add(new Bullet(new float[]{me.x-10, me.y-5, player.x, player.y}, mh));
+					mh.bullets.add(new Bullet(new float[]{me.x-12, me.y-12, player.x-12, player.y-12}, mh));
 					tmrShoot = 0;
 				}
 			}

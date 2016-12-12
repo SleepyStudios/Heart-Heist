@@ -6,13 +6,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
+import net.sleepystudios.bankvault.proc.ProcObject;
+
 public class Bullet {
-    float startX, startY, destX, destY, startSpeed, dx, dy, rad, angle;
+    float startX, startY, destX, destY, dx, dy, rad, angle, startSpeed, speed;
     Vector2 location;
     TextureRegion bullet;
 	public boolean exists = true;
@@ -29,6 +32,8 @@ public class Bullet {
         
         location = new Vector2(startX, startY);
         angle = (float) (Math.toDegrees(Math.atan2(startY-destY, startX-destX)));
+        
+        startSpeed = speed = 20f;
         
         recalculateVector();
         
@@ -61,7 +66,6 @@ public class Bullet {
     private void recalculateVector() {
         rad = (float) (Math.atan2(destX - startX, startY - destY));
         
-        float speed = 30f;
         dx = (float) MathUtils.sin(rad) * speed;
         dy = (float) MathUtils.cos(rad) * speed;
     }
@@ -69,6 +73,11 @@ public class Bullet {
     public void move(MapHandler mh) {
         float x = location.x;
         float y = location.y;
+        
+        if(speed<=0) {
+        	exists = false;
+        	return;
+        }
 
         if(!isBlocked(x + dx, y - dy, mh)) {
             x += dx;
@@ -77,7 +86,8 @@ public class Bullet {
             
             mh.tracers.add(new TracerBit(x, y, angle, this));
         } else {
-        	exists = false;
+        	speed-=2f;
+        	recalculateVector();
         }
     }
 
@@ -96,6 +106,19 @@ public class Bullet {
             return true;
         }
         
+        for(Rectangle r : mh.rects) {
+			if(Intersector.overlapConvexPolygons(boxToPoly(), makePoly(r))) return true;
+		}
+		
+		for(ProcObject o : mh.procObjs) {
+			if(o.rect!=null && o.hasCollision && Intersector.overlapConvexPolygons(boxToPoly(), makePoly(o.rect))) return true;
+		}
+		
+		if(Intersector.overlaps(box, mh.p.box)) {
+			BankVault.end = true;
+			return true;
+		}
+        
         return false;
     }
     
@@ -109,6 +132,16 @@ public class Bullet {
 				box.getX()+box.getWidth(), box.getY()});
 		poly.setOrigin(box.getX()+4-3, box.getY()+2+1);
 		poly.rotate(angle);
+		
+		return poly;
+    }
+    
+    public Polygon makePoly(Rectangle box) {
+    	Polygon poly = new Polygon(new float[] {
+				box.getX(), box.getY(), 
+				box.getX(), box.getY()+box.getHeight(),
+				box.getX()+box.getWidth(), box.getY()+box.getHeight(),
+				box.getX()+box.getWidth(), box.getY()});
 		
 		return poly;
     }

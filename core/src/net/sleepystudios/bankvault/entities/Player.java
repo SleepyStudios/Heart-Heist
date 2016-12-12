@@ -5,11 +5,14 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Intersector;
 
 import net.sleepystudios.bankvault.AnimGenerator;
 import net.sleepystudios.bankvault.BankVault;
 import net.sleepystudios.bankvault.Exclam;
 import net.sleepystudios.bankvault.MapHandler;
+import net.sleepystudios.bankvault.proc.Heart;
+import net.sleepystudios.bankvault.proc.ProcObject;
 
 public class Player extends Entity {
 	public final int IDLE = 0, UP = 1, DOWN = 2, LEFT = 3, RIGHT = 4, SHADOW = 5;
@@ -20,8 +23,8 @@ public class Player extends Entity {
 	public Player(MapHandler mh) {
 		super(mh);
 		
-		OX = 8;
-		OY = 8;
+		OX = 10;
+		OY = 10;
 		
 		anim[IDLE] = new Animation(animSpeed, AnimGenerator.gen("shadow_idle.png", FW, FH));
 		anim[UP] = new Animation(animSpeed, AnimGenerator.gen("shadow_up.png", FW, FH));
@@ -102,6 +105,14 @@ public class Player extends Entity {
         } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
         	animIndex = RIGHT;
         	if(!isBlocked(x+speed, y)) move(x + speed, y);
+        }
+        
+        for(ProcObject o : mh.procObjs) {
+        	if(o instanceof Heart) {
+        		if(Intersector.overlaps(o.rect, box)) {
+        			o.sprite.scale(1.1f*o.sprite.getScaleX()*Gdx.graphics.getDeltaTime());
+        		}
+        	}
         }
 	}
 

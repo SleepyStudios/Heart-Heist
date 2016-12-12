@@ -23,7 +23,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import net.sleepystudios.bankvault.entities.Drone;
+import net.sleepystudios.bankvault.proc.Camera;
 import net.sleepystudios.bankvault.proc.DecalProcObject;
+import net.sleepystudios.bankvault.proc.Heart;
 import net.sleepystudios.bankvault.proc.ProcObject;
 
 public class BankVault extends ApplicationAdapter implements InputProcessor {
@@ -73,11 +75,11 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		
-		for(ProcObject o : mh.procObjs) if(o instanceof DecalProcObject) o.render(batch);
+		for(ProcObject o : mh.procObjs) if(o instanceof DecalProcObject && !(o instanceof Heart) && !(o instanceof Camera)) o.render(batch);
 		
 		mh.p.render(batch);
 		
-		for(ProcObject o : mh.procObjs) if(!(o instanceof DecalProcObject)) o.render(batch);
+		for(ProcObject o : mh.procObjs) if(!(o instanceof DecalProcObject) || o instanceof Heart || o instanceof Camera) o.render(batch);
 		
 		for(int i=0; i<mh.tracers.size(); i++) {
 			TracerBit t = mh.tracers.get(i);

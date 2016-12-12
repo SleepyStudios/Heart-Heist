@@ -25,6 +25,7 @@ public class Camera extends DecalProcObject {
 		Rectangle nr = new Rectangle(rect.x, rect.y+s, rect.width, rect.height);
 		for(Rectangle r : mh.rects) {
 			if(r.x == nr.x && r.y == nr.y) {
+				sprite.setRotation(0);
 				found = true;
 				break;
 			}

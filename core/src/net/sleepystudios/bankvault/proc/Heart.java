@@ -37,6 +37,7 @@ public class Heart extends DecalProcObject {
 	@Override
 	public void render(SpriteBatch batch) {
 		animTmr+=Gdx.graphics.getDeltaTime();
-		batch.draw(anim.getKeyFrame(animTmr, true), sprite.getX(), sprite.getY());
+		
+		batch.draw(anim.getKeyFrame(animTmr, true), sprite.getX(), sprite.getY(), sprite.getOriginX(), sprite.getOriginY(), 32, 32, sprite.getScaleX(), sprite.getScaleY(), sprite.getRotation());
 	}
 }
