@@ -2,7 +2,6 @@ package net.sleepystudios.bankvault.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -13,17 +12,16 @@ import net.sleepystudios.bankvault.Exclam;
 import net.sleepystudios.bankvault.MapHandler;
 
 public class Player extends Entity {
-	OrthographicCamera camera;
 	public final int IDLE = 0, UP = 1, DOWN = 2, LEFT = 3, RIGHT = 4, SHADOW = 5;
 	Animation anim[] = new Animation[6];
 	public int animIndex;
 	public Exclam e;
 	
-	public Player(OrthographicCamera camera, MapHandler mh) {
+	public Player(MapHandler mh) {
 		super(mh);
-		this.camera = camera;
 		
-		OX = OY = 10;
+		OX = 8;
+		OY = 8;
 		
 		anim[IDLE] = new Animation(animSpeed, AnimGenerator.gen("shadow_idle.png", FW, FH));
 		anim[UP] = new Animation(animSpeed, AnimGenerator.gen("shadow_up.png", FW, FH));
@@ -44,7 +42,7 @@ public class Player extends Entity {
 	float shownX, shownY, tmrShadow, tmrCanShadow;
 	boolean reversed, canShadow = true;
 	public void render(SpriteBatch batch) {
-		camera.position.set(shownCamX+=(camX-shownCamX)*0.08f, shownCamY+=(camY-shownCamY)*0.08f, 0);
+		BankVault.camera.position.set(shownCamX+=(camX-shownCamX)*0.08f, shownCamY+=(camY-shownCamY)*0.08f, 0);
 		
 		animTmr += Gdx.graphics.getDeltaTime();
 		
@@ -128,9 +126,9 @@ public class Player extends Entity {
     	int mapPixelWidth = mh.getWidth();
     	int mapPixelHeight = mh.getHeight();
     	
-    	float minCameraX = camera.zoom * (camera.viewportWidth / 2);
+    	float minCameraX = BankVault.camera.zoom * (BankVault.camera.viewportWidth / 2);
         float maxCameraX = (mapPixelWidth) - minCameraX;
-        float minCameraY = camera.zoom * (camera.viewportHeight / 2);
+        float minCameraY = BankVault.camera.zoom * (BankVault.camera.viewportHeight / 2);
         float maxCameraY = (mapPixelHeight) - minCameraY;
         
         camX = (int) Math.min(maxCameraX, Math.max(x, minCameraX));
@@ -139,7 +137,7 @@ public class Player extends Entity {
         if(!firstUpdate) {
             shownCamX = camX;
         	shownCamY = camY;
-        	camera.position.set(shownCamX, shownCamY, 0);
+        	BankVault.camera.position.set(shownCamX, shownCamY, 0);
         	
         	firstUpdate = true;
         }

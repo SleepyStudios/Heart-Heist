@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Vector3;
 
 import net.sleepystudios.bankvault.AnimGenerator;
 import net.sleepystudios.bankvault.BankVault;
+import net.sleepystudios.bankvault.Bullet;
 import net.sleepystudios.bankvault.Exclam;
 import net.sleepystudios.bankvault.MapHandler;
 import net.sleepystudios.bankvault.proc.ProcObject;
@@ -69,7 +70,7 @@ public class Drone extends Entity {
         update();
 	}
 	
-	private float tmrChangeDir, tmrMove, tmrSpot; 
+	private float tmrChangeDir, tmrMove, tmrSpot, tmrShoot; 
 	private boolean changeDest;
 	int changes = 0;
 	boolean seesPlayer;
@@ -85,7 +86,7 @@ public class Drone extends Entity {
 			}
 			
 			tmrSpot+=Gdx.graphics.getDeltaTime();
-			if(tmrSpot>=0.3) {
+			if(tmrSpot>=0.2) {
 				if(me.dst(player)<maxRange) {
 					float yd = y - mh.p.y;
 					float xd = x - mh.p.x;
@@ -95,7 +96,13 @@ public class Drone extends Entity {
 			}
 			
 			if(Intersector.overlapConvexPolygons(vision, boxToPoly(mh.p.box, false)) && mh.p.animIndex!=mh.p.SHADOW) {
-				BankVault.end = true;
+				//BankVault.end = true;
+				
+				tmrShoot+=Gdx.graphics.getDeltaTime();
+				if(tmrShoot>=0.25) {
+					mh.bullets.add(new Bullet(new float[]{me.x-10, me.y-5, player.x, player.y}, mh));
+					tmrShoot = 0;
+				}
 			}
 		} else {
 			seesPlayer = false;
@@ -172,7 +179,7 @@ public class Drone extends Entity {
 		
 		if(p.animIndex==p.SHADOW) return false;
 		
-		if(me.dst(player)>maxRange) return false;
+		if(me.dst(player)>maxRange && !seesPlayer) return false;
 		
 		for(Rectangle r : mh.rects) {
 			if(Intersector.intersectSegmentPolygon(me, player, boxToPoly(r, false))) return false;

@@ -31,7 +31,7 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 	public static OrthographicCamera camera;
 	MapHandler mh;
 	ShapeRenderer sr;
-	boolean showHitBoxes;
+	public static boolean showHitBoxes;
 	Sprite endCircle;
 	public static boolean end;
 	
@@ -52,7 +52,7 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 
 		int room = rand(1, 1);
 		mh = new MapHandler(loader.load("room" + room + ".tmx", params));
-		mh.gen(camera);
+		mh.gen();
 		sr = new ShapeRenderer();
 		
 		endCircle = new Sprite(new Texture("endcircle.png"));
@@ -78,6 +78,24 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 		mh.p.render(batch);
 		
 		for(ProcObject o : mh.procObjs) if(!(o instanceof DecalProcObject)) o.render(batch);
+		
+		for(int i=0; i<mh.tracers.size(); i++) {
+			TracerBit t = mh.tracers.get(i);
+			if(t.exists) {
+				t.render(batch);
+			} else {
+				mh.bullets.remove(t);
+			}
+		}
+		
+		for(int i=0; i<mh.bullets.size(); i++) {
+			Bullet b = mh.bullets.get(i);
+			if(b.exists) {
+				b.render(batch);
+			} else {
+				mh.bullets.remove(b);
+			}
+		}
 		
 		for(Drone d : mh.drones) d.render(batch);
 		
@@ -110,7 +128,7 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 			
 			circleSize+=(tar-circleSize)*0.06f;
 			if((int) circleSize+275>=tar) {
-				mh.gen(camera);
+				mh.gen();
 				circleReverse = true;
 			}
 		} else {

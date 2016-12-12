@@ -23,6 +23,8 @@ public class MapHandler {
 	public ArrayList<Rectangle> rects = new ArrayList<Rectangle>();
 	public ArrayList<ProcObject> procObjs = new ArrayList<ProcObject>();
 	public ArrayList<Drone> drones = new ArrayList<Drone>();
+	public ArrayList<Bullet> bullets = new ArrayList<Bullet>();
+	public ArrayList<TracerBit> tracers = new ArrayList<TracerBit>();
 	
 	public int spawnX, spawnY;
 	public Player p;
@@ -59,7 +61,7 @@ public class MapHandler {
         }
 	}
 	
-	public void gen(OrthographicCamera camera) {
+	public void gen() {
 		int size[] = {30, 15, 5, 5};
 		
 		procObjs.clear();
@@ -86,7 +88,10 @@ public class MapHandler {
 			drones.add(new Drone(this));
 		}
 		
-		p = new Player(camera, this);
+		p = new Player(this);
+		
+		bullets.clear();
+		tracers.clear();
 	}
 	
 	public void render(OrthographicCamera camera) {
