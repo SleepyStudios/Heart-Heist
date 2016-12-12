@@ -77,8 +77,14 @@ public class Player extends Entity {
         
 		// movement
         if(!Gdx.input.isKeyPressed(Input.Keys.W) && !Gdx.input.isKeyPressed(Input.Keys.A) && !Gdx.input.isKeyPressed(Input.Keys.S) && !Gdx.input.isKeyPressed(Input.Keys.D)) {
-        	if(animIndex!=SHADOW) animIndex = IDLE;
-        }
+        	if(animIndex!=SHADOW) {
+        		if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+        			goShadow();
+        		} else {
+        			animIndex = IDLE;
+        		}
+        	}
+        } 
         
     	float speed = 150f * Gdx.graphics.getDeltaTime();
     	
@@ -98,7 +104,7 @@ public class Player extends Entity {
 	}
 
 	public void goShadow() {
-		if(animIndex==SHADOW || !canShadow) return;
+		if(!canShadow) return;
 		
 		animTmr = 0;
 		animIndex = SHADOW;

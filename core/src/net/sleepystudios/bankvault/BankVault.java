@@ -103,7 +103,6 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 
 	@Override
 	public boolean keyDown(int keycode) {
-		if(keycode==Input.Keys.SPACE) p.goShadow();
 		return false;
 	}
 
