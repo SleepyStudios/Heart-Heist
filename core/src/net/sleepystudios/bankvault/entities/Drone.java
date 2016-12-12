@@ -25,7 +25,7 @@ public class Drone extends Entity {
 		anim = new Animation(animSpeed, AnimGenerator.gen("drone.png", FW, FH));
 		shadow = new Texture("drone_shadow.png");
 		
-		while(isBlocked(x, y)) {
+		while(isBlocked(x, y) || !checkDistance(x, y)) {
 			x = BankVault.snap(BankVault.rand(0, mh.getWidth()-FW));
 			y = BankVault.snap(BankVault.rand(0, mh.getHeight()-FH));
 		}
@@ -33,6 +33,16 @@ public class Drone extends Entity {
 		move(x, y);
 		
 		setDestination();
+	}
+	
+	
+	private boolean checkDistance(float x, float y) {
+		Vector2 pos = new Vector2(x, y);
+		Vector2 spawn = new Vector2(mh.spawnX, mh.spawnY);
+		
+		if(pos.dst(spawn)>150) return true; 
+		
+		return false;
 	}
 	
 	public void render(SpriteBatch batch) {
@@ -51,19 +61,21 @@ public class Drone extends Entity {
 	int changes = 0;
 	public void update() {
 		if(changeDest) {
+			float maxA = 60f;
+			
 			tmrChangeDir+=Gdx.graphics.getDeltaTime();
 			if(tmrChangeDir>=3) {
 				setDestination();
 				changeDest = false;
 				tmrChangeDir = 0;
 			} else if((int) tmrChangeDir==0 && changes==0) {
-				angle+=180f;//BankVault.rand(-30f, 30f);
+				angle+=180f;
 				changes++;
 			} else if((int) tmrChangeDir==1 && changes==1) {
-				angle+=BankVault.rand(-30f, 30f);
+				angle+=BankVault.rand(-maxA, maxA);
 				changes++;
 			} else if((int) tmrChangeDir==2 && changes==2) {
-				angle+=BankVault.rand(-30f, 30f);
+				angle+=BankVault.rand(-maxA, maxA);
 				changes = 0;
 			}
 		}
