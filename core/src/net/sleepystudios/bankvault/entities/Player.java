@@ -13,9 +13,9 @@ import net.sleepystudios.bankvault.MapHandler;
 
 public class Player extends Entity {
 	OrthographicCamera camera;
-	final int IDLE = 0, UP = 1, DOWN = 2, LEFT = 3, RIGHT = 4, SHADOW = 5;
+	public final int IDLE = 0, UP = 1, DOWN = 2, LEFT = 3, RIGHT = 4, SHADOW = 5;
 	Animation anim[] = new Animation[6];
-	int animIndex;
+	public int animIndex;
 	
 	public Player(OrthographicCamera camera, MapHandler mh) {
 		super(mh);

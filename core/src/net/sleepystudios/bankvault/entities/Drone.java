@@ -4,11 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import net.sleepystudios.bankvault.AnimGenerator;
 import net.sleepystudios.bankvault.BankVault;
 import net.sleepystudios.bankvault.MapHandler;
+import net.sleepystudios.bankvault.proc.ProcObject;
 
 public class Drone extends Entity {
 	public float angle, shownAngle;
@@ -60,6 +64,8 @@ public class Drone extends Entity {
 	private boolean changeDest;
 	int changes = 0;
 	public void update() {
+		if(castRay(mh.p)) BankVault.end = true;
+		
 		if(changeDest) {
 			float maxA = 60f;
 			
@@ -124,17 +130,33 @@ public class Drone extends Entity {
 	}
 	
 	public boolean castRay(Player p) {
-		Vector2 me = new Vector2(box.getX()+box.getWidth()/2, box.getY()+box.getHeight()/2);
-		Vector2 player = new Vector2(p.box.getX()+p.box.getWidth()/2, p.box.getX()+p.box.getWidth()/2);
+		Vector2 me = new Vector2(box.getX()+FW/2, box.getY()+FH/2);
+		Vector2 player = new Vector2(p.box.getX()+FW/2, p.box.getY()+p.FH/2);
+
+		if(p.animIndex==p.SHADOW) return false;
 		
-//		for(int i=0; i<Builder.mainGame.blocks.size(); i++) {
-//			Block b = Builder.mainGame.blocks.get(i);
-//			
-//			// check for collision
-//			if(b.poly!=null && b.solid && Intersector.intersectSegmentPolygon(player, block, b.poly)) {
-//				return false;
-//			}
-//		}
+		if(me.dst(player)>200) return false;
+		
+		for(Rectangle r : mh.rects) {
+			if(Intersector.intersectSegmentPolygon(me, player, boxToPoly(r))) return false;
+		}
+		
+		for(ProcObject o : mh.procObjs) {
+			if(o.hasCollision && Intersector.intersectSegmentPolygon(me, player, boxToPoly(o.rect))) return false;
+		}
+		
 		return true;
 	}
+	
+	public Polygon boxToPoly(Rectangle box) {
+    	if(box==null) return null;
+    	
+    	Polygon poly = new Polygon(new float[] {
+				box.getX(), box.getY(), 
+				box.getX(), box.getY()+box.getHeight(),
+				box.getX()+box.getWidth(), box.getY()+box.getHeight(),
+				box.getX()+box.getWidth(), box.getY()});
+		
+		return poly; 
+    }
 }

@@ -9,6 +9,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Rectangle;
 
 import net.sleepystudios.bankvault.entities.Drone;
+import net.sleepystudios.bankvault.entities.Player;
 import net.sleepystudios.bankvault.proc.DecalProcObject;
 import net.sleepystudios.bankvault.proc.HiddenProcObject;
 import net.sleepystudios.bankvault.proc.ProcObject;
@@ -22,13 +23,13 @@ public class MapHandler {
 	public ArrayList<Drone> drones = new ArrayList<Drone>();
 	
 	public int spawnX, spawnY;
+	public Player p;
 	
 	public MapHandler(TiledMap map) {
 		this.map = map;
 		mapRenderer = new FixedTiledMapRenderer(map);
 		
 		loadRects();
-		gen();
 	}
 	
 	private void loadRects() {
@@ -56,8 +57,8 @@ public class MapHandler {
         }
 	}
 	
-	public void gen() {
-		int size[] = {30, 16, 5};
+	public void gen(OrthographicCamera camera) {
+		int size[] = {30, 15, 5, 1};
 		
 		procObjs.clear();
 		
@@ -77,9 +78,11 @@ public class MapHandler {
 		}
 		
 		drones.clear();
-		for(int i=0; i<size[2]; i++) {
+		for(int i=0; i<size[3]; i++) {
 			drones.add(new Drone(this));
 		}
+		
+		p = new Player(camera, this);
 	}
 	
 	public void render(OrthographicCamera camera) {

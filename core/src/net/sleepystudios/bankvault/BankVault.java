@@ -17,10 +17,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader.Parameters;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 import net.sleepystudios.bankvault.entities.Drone;
-import net.sleepystudios.bankvault.entities.Player;
 import net.sleepystudios.bankvault.proc.DecalProcObject;
 import net.sleepystudios.bankvault.proc.ProcObject;
 
@@ -28,7 +30,6 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 	SpriteBatch batch;
 	OrthographicCamera camera;
 	MapHandler mh;
-	Player p;
 	ShapeRenderer sr;
 	boolean showHitBoxes;
 	Sprite endCircle;
@@ -51,7 +52,7 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 
 		int room = rand(1, 1);
 		mh = new MapHandler(loader.load("room" + room + ".tmx", params));
-		p = new Player(camera, mh);
+		mh.gen(camera);
 		sr = new ShapeRenderer();
 		
 		endCircle = new Sprite(new Texture("endcircle.png"));
@@ -74,7 +75,7 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 		
 		for(ProcObject o : mh.procObjs) if(o instanceof DecalProcObject) o.render(batch);
 		
-		p.render(batch);
+		mh.p.render(batch);
 		
 		for(ProcObject o : mh.procObjs) if(!(o instanceof DecalProcObject)) o.render(batch);
 		
@@ -102,8 +103,7 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 			
 			circleSize+=(tar-circleSize)*0.05f;
 			if((int) circleSize+250>=tar) {
-				mh.gen();
-				p = new Player(camera, mh);
+				mh.gen(camera);
 				circleReverse = true;
 			}
 		} else {
@@ -117,7 +117,7 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 		}
 		
 		endCircle.setSize(circleSize, circleSize);
-		endCircle.setPosition(p.box.x+p.box.width/2-endCircle.getWidth()/2, p.box.y+p.box.height/2-endCircle.getHeight()/2);
+		endCircle.setPosition(mh.p.box.x+mh.p.box.width/2-endCircle.getWidth()/2, mh.p.box.y+mh.p.box.height/2-endCircle.getHeight()/2);
 		endCircle.draw(batch);
 	}
 	
@@ -130,13 +130,57 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 		
 		for(Rectangle r : mh.rects) sr.rect(r.x, r.y, r.width, r.height);
 		for(ProcObject o : mh.procObjs) sr.rect(o.rect.x, o.rect.y, o.rect.width, o.rect.height);
-		for(Drone d : mh.drones) sr.rect(d.box.x, d.box.y, d.box.width, d.box.height);
-		sr.rect(p.box.x, p.box.y, p.box.width, p.box.height);
+		
+		for(Drone d : mh.drones) {
+			sr.setColor(Color.RED);
+			sr.rect(d.box.x, d.box.y, d.box.width, d.box.height);
+			
+			sr.setColor(Color.CYAN);
+			
+			Vector2 me = new Vector2(d.box.x+d.box.width/2, d.box.y+d.box.height/2);
+			Vector2 player = new Vector2(mh.p.box.x+mh.p.box.width/2, mh.p.box.y+mh.p.box.height/2);
+			
+			for(Rectangle r : mh.rects) {
+				if(Intersector.intersectSegmentPolygon(me, player, boxToPoly(r))) {
+					sr.setColor(Color.PURPLE);
+					break;
+				}
+			}
+			
+			for(ProcObject o : mh.procObjs) {
+				if(o.hasCollision && Intersector.intersectSegmentPolygon(me, player, boxToPoly(o.rect))) {
+					sr.setColor(Color.PURPLE);
+					break;
+				}
+			}
+			
+			if(mh.p.animIndex==mh.p.SHADOW) sr.setColor(Color.PURPLE);
+			
+			sr.line(me, player);
+			
+		}
+		sr.setColor(Color.YELLOW);
+		
+		sr.rect(mh.p.box.x, mh.p.box.y, mh.p.box.width, mh.p.box.height);
 		
 		sr.end();
 		
 		batch.begin();
 	}
+	
+	public Polygon boxToPoly(Rectangle box) {
+    	if(box==null) return null;
+    	
+    	Polygon poly = new Polygon(new float[] {
+				box.getX(), box.getY(), 
+				box.getX(), box.getY()+box.getHeight(),
+				box.getX()+box.getWidth(), box.getY()+box.getHeight(),
+				box.getX()+box.getWidth(), box.getY()});
+		//poly.setOrigin(box.getX()+FW/2, box.getY()+FH/2);
+		//if(rotate) poly.rotate(angle);
+		
+		return poly; 
+    }
 	
 	@Override
 	public void dispose () {
