@@ -2,9 +2,13 @@ package net.sleepystudios.bankvault.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Intersector;
 
 import net.sleepystudios.bankvault.AnimGenerator;
@@ -38,6 +42,8 @@ public class Player extends Entity {
 		shownX = x = mh.spawnX+1;
 		y = mh.spawnY;
 		shownY = y - mh.getTileSize()*4;
+		
+		sr = new ShapeRenderer();
 		
 		move(x, y);
 	}
@@ -73,7 +79,7 @@ public class Player extends Entity {
         	
         	if(!canShadow) {
             	tmrCanShadow+=Gdx.graphics.getDeltaTime();
-            	if(tmrCanShadow>=5) {
+            	if(tmrCanShadow>=3) {
             		canShadow = true;
             		tmrCanShadow = 0;
             	}
@@ -114,6 +120,43 @@ public class Player extends Entity {
         		}
         	}
         }
+        
+        batch.end();
+        
+        renderBar();
+        
+        batch.begin();
+	}
+	
+	ShapeRenderer sr;
+	public void renderBar() {
+		if(animIndex==SHADOW || !canShadow) {
+			Gdx.gl.glEnable(GL20.GL_BLEND);
+			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+			
+			sr.setProjectionMatrix(BankVault.camera.combined);
+			sr.begin(ShapeType.Filled);
+			
+			float width = 20;
+			float xp = x+FW/2-width/2; 
+			float yp = box.y-10;
+			
+			sr.setColor(new Color(0, 0, 0, 0.4f));
+			sr.rect(xp, yp, width, 2);
+			
+			float perc;
+			
+			if(animIndex==SHADOW) {
+				perc = (float) (tmrShadow / 3f * width);
+			} else {
+				perc = width - (float) (tmrCanShadow / 3f * width);
+			}
+			
+			sr.setColor(new Color(0.7f, 0.7f, 0.7f, 0.7f));
+			sr.rect(xp, yp, perc, 2);
+			sr.end();
+			Gdx.gl.glDisable(GL20.GL_BLEND);
+		}
 	}
 
 	public void goShadow() {
