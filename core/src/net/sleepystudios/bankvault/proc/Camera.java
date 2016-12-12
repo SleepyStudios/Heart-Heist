@@ -1,6 +1,7 @@
 package net.sleepystudios.bankvault.proc;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 import net.sleepystudios.bankvault.MapHandler;
 
@@ -13,6 +14,7 @@ public class Camera extends DecalProcObject {
 	protected void gen() {
 		super.gen();
 		checkPosition();
+		if(!checkDistance(sprite.getX(), sprite.getY())) gen();
 	}
 	
 	private void checkPosition() {
@@ -59,5 +61,14 @@ public class Camera extends DecalProcObject {
 		}
 		
 		if(!found) gen();
+	}
+	
+	private boolean checkDistance(float x, float y) {
+		Vector2 pos = new Vector2(x, y);
+		Vector2 spawn = new Vector2(mh.spawnX, mh.spawnY);
+		
+		if(pos.dst(spawn)>200) return true; 
+		
+		return false;
 	}
 }
