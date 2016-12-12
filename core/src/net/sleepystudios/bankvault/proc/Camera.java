@@ -1,13 +1,12 @@
-package net.sleepystudios.bankvault;
+package net.sleepystudios.bankvault.proc;
 
 import com.badlogic.gdx.math.Rectangle;
 
-import net.sleepystudios.bankvault.proc.ProcObject;
+import net.sleepystudios.bankvault.MapHandler;
 
-public class Camera extends ProcObject {
+public class Camera extends DecalProcObject {
 	public Camera(MapHandler mh) {
 		super("camera", mh);
-		hasCollision = false;
 	}
 	
 	@Override
