@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import net.sleepystudios.bankvault.AnimGenerator;
 import net.sleepystudios.bankvault.BankVault;
+import net.sleepystudios.bankvault.Exclam;
 import net.sleepystudios.bankvault.MapHandler;
 
 public class Player extends Entity {
@@ -16,6 +17,7 @@ public class Player extends Entity {
 	public final int IDLE = 0, UP = 1, DOWN = 2, LEFT = 3, RIGHT = 4, SHADOW = 5;
 	Animation anim[] = new Animation[6];
 	public int animIndex;
+	public Exclam e;
 	
 	public Player(OrthographicCamera camera, MapHandler mh) {
 		super(mh);

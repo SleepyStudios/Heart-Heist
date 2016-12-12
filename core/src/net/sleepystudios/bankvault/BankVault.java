@@ -28,7 +28,7 @@ import net.sleepystudios.bankvault.proc.ProcObject;
 
 public class BankVault extends ApplicationAdapter implements InputProcessor {
 	SpriteBatch batch;
-	OrthographicCamera camera;
+	public static OrthographicCamera camera;
 	MapHandler mh;
 	ShapeRenderer sr;
 	boolean showHitBoxes;
@@ -87,6 +87,13 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 		
         mh.renderFringe(camera);
         
+        batch.begin();
+        
+        for(Drone d : mh.drones) if(d.e!=null) d.e.render(batch);
+        if(mh.p.e!=null) mh.p.e.render(batch);
+        
+        batch.end();
+        
         if(end) {
         	batch.begin();
         	renderEndCircle();
@@ -101,15 +108,15 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 		if(!circleReverse) {
 			tar = Gdx.graphics.getWidth()*1.1f;
 			
-			circleSize+=(tar-circleSize)*0.05f;
-			if((int) circleSize+250>=tar) {
+			circleSize+=(tar-circleSize)*0.06f;
+			if((int) circleSize+275>=tar) {
 				mh.gen(camera);
 				circleReverse = true;
 			}
 		} else {
 			tar = 0;
 			
-			circleSize+=(tar-circleSize)*0.25f;
+			circleSize+=(tar-circleSize)*0.3f;
 			if((int) circleSize-50<=tar) {
 				end = false;
 				circleReverse = false;
@@ -134,6 +141,9 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 		for(Drone d : mh.drones) {
 			sr.setColor(Color.RED);
 			sr.rect(d.box.x, d.box.y, d.box.width, d.box.height);
+			
+			sr.setColor(Color.PINK);
+			sr.polygon(d.vision.getTransformedVertices());
 			
 			sr.setColor(Color.CYAN);
 			
@@ -176,8 +186,6 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 				box.getX(), box.getY()+box.getHeight(),
 				box.getX()+box.getWidth(), box.getY()+box.getHeight(),
 				box.getX()+box.getWidth(), box.getY()});
-		//poly.setOrigin(box.getX()+FW/2, box.getY()+FH/2);
-		//if(rotate) poly.rotate(angle);
 		
 		return poly; 
     }

@@ -60,7 +60,7 @@ public class MapHandler {
 	}
 	
 	public void gen(OrthographicCamera camera) {
-		int size[] = {30, 15, 5, 1};
+		int size[] = {30, 15, 5, 5};
 		
 		procObjs.clear();
 		

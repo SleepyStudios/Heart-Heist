@@ -8,9 +8,11 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 import net.sleepystudios.bankvault.AnimGenerator;
 import net.sleepystudios.bankvault.BankVault;
+import net.sleepystudios.bankvault.Exclam;
 import net.sleepystudios.bankvault.MapHandler;
 import net.sleepystudios.bankvault.proc.ProcObject;
 
@@ -18,6 +20,8 @@ public class Drone extends Entity {
 	public float angle, shownAngle;
 	public int dir;
 	Animation anim; Texture shadow;
+	public Polygon vision;
+	public Exclam e;
 		
 	public Drone(MapHandler mh) {
 		super(mh);
@@ -50,23 +54,55 @@ public class Drone extends Entity {
 	}
 	
 	public void render(SpriteBatch batch) {
-		shownAngle += (angle - shownAngle) * 0.15f;
+		float temp = angle - 90f;
+		temp = temp % 360;
+		if (temp < 0)  temp += 360;
+		
+		shownAngle += (temp - shownAngle) * 0.1f;
 		
 		animTmr+=Gdx.graphics.getDeltaTime();
 		
 		batch.draw(shadow, x+FW/2-shadow.getWidth()/2, y+FH/2-shadow.getHeight()/2);
-		batch.draw(anim.getKeyFrame(animTmr, true), x, y, FW/2, FH/2, FW, FH, 1f, 1f, shownAngle-90f);
+		batch.draw(anim.getKeyFrame(animTmr, true), x, y, FW/2, FH/2, FW, FH, 1f, 1f, shownAngle);
 		
+		updateHitBox(x, y);
         update();
 	}
 	
-	private float tmrChangeDir, tmrMove; 
+	private float tmrChangeDir, tmrMove, tmrSpot; 
 	private boolean changeDest;
 	int changes = 0;
+	boolean seesPlayer;
 	public void update() {
-		if(castRay(mh.p)) BankVault.end = true;
+		Vector2 me = new Vector2(box.getX()+FW/2, box.getY()+FH/2);
+		Vector2 player = new Vector2(mh.p.box.getX()+FW/2, mh.p.box.getY()+mh.p.FH/2);
 		
-		if(changeDest) {
+		if(castRay(me, player, mh.p)) {
+			if(!seesPlayer) {
+				e = new Exclam(me.x-10, me.y);
+				mh.p.e = new Exclam(player.x-10, player.y);
+				seesPlayer = true;
+			}
+			
+			tmrSpot+=Gdx.graphics.getDeltaTime();
+			if(tmrSpot>=0.3) {
+				if(me.dst(player)<maxRange) {
+					float yd = y - mh.p.y;
+					float xd = x - mh.p.x;
+					float rad = (float) Math.atan2(yd, xd);
+					angle = (float) Math.toDegrees(rad)+90f;
+				}
+			}
+			
+			if(Intersector.overlapConvexPolygons(vision, boxToPoly(mh.p.box, false)) && mh.p.animIndex!=mh.p.SHADOW) {
+				BankVault.end = true;
+			}
+		} else {
+			seesPlayer = false;
+			tmrSpot = 0;
+		}
+		
+		if(changeDest && !seesPlayer) {
 			float maxA = 60f;
 			
 			tmrChangeDir+=Gdx.graphics.getDeltaTime();
@@ -87,9 +123,10 @@ public class Drone extends Entity {
 		}
 		
 		tmrMove+=Gdx.graphics.getDeltaTime();
-		if(tmrMove>=0.01f && !changeDest) {
+		if(tmrMove>=0.01f && !changeDest && !seesPlayer) {
 			float speed = 100 * Gdx.graphics.getDeltaTime();
 			
+			angle = dir*90f;
 			switch(dir) {
 			case 0:
 				if(!isBlocked(x, y+speed)) {
@@ -129,26 +166,26 @@ public class Drone extends Entity {
 		angle = dir*90f;
 	}
 	
-	public boolean castRay(Player p) {
-		Vector2 me = new Vector2(box.getX()+FW/2, box.getY()+FH/2);
-		Vector2 player = new Vector2(p.box.getX()+FW/2, p.box.getY()+p.FH/2);
-
+	int maxRange = 240;
+	public boolean castRay(Vector2 me, Vector2 player, Player p) {
+		if(!BankVault.camera.frustum.pointInFrustum(new Vector3(me.x, me.y, 0))) return false;
+		
 		if(p.animIndex==p.SHADOW) return false;
 		
-		if(me.dst(player)>200) return false;
+		if(me.dst(player)>maxRange) return false;
 		
 		for(Rectangle r : mh.rects) {
-			if(Intersector.intersectSegmentPolygon(me, player, boxToPoly(r))) return false;
+			if(Intersector.intersectSegmentPolygon(me, player, boxToPoly(r, false))) return false;
 		}
 		
 		for(ProcObject o : mh.procObjs) {
-			if(o.hasCollision && Intersector.intersectSegmentPolygon(me, player, boxToPoly(o.rect))) return false;
+			if(o.hasCollision && Intersector.intersectSegmentPolygon(me, player, boxToPoly(o.rect, false))) return false;
 		}
 		
 		return true;
 	}
 	
-	public Polygon boxToPoly(Rectangle box) {
+	public Polygon boxToPoly(Rectangle box, boolean vision) {
     	if(box==null) return null;
     	
     	Polygon poly = new Polygon(new float[] {
@@ -156,7 +193,19 @@ public class Drone extends Entity {
 				box.getX(), box.getY()+box.getHeight(),
 				box.getX()+box.getWidth(), box.getY()+box.getHeight(),
 				box.getX()+box.getWidth(), box.getY()});
-		
+    	
+    	
+    	if(vision) {
+    		poly.setOrigin(this.box.getX()+this.box.getWidth()/2, this.box.getY()+this.box.getHeight()/2);
+    		poly.rotate(shownAngle+180f);
+    	}
+    	
 		return poly; 
     }
+	
+	@Override
+	public void updateHitBox(float x, float y) {
+		super.updateHitBox(x, y);
+		vision = boxToPoly(new Rectangle(x+box.width, box.y, maxRange, box.height), true);
+	}
 }
