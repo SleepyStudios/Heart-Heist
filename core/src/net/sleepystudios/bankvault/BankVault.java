@@ -9,7 +9,9 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -29,6 +31,8 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 	Player p;
 	ShapeRenderer sr;
 	boolean showHitBoxes;
+	Sprite endCircle;
+	public static boolean end;
 	
 	@Override
 	public void create () {
@@ -49,6 +53,10 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 		mh = new MapHandler(loader.load("room" + room + ".tmx", params));
 		p = new Player(camera, mh);
 		sr = new ShapeRenderer();
+		
+		endCircle = new Sprite(new Texture("endcircle.png"));
+		endCircle.setSize(1, 1);
+		endCircle.setPosition(Gdx.graphics.getWidth()/2-endCircle.getWidth()/2, Gdx.graphics.getHeight()/2-endCircle.getHeight()/2);
 		
 		Gdx.input.setInputProcessor(this);
 	}
@@ -77,6 +85,40 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 		batch.end();
 		
         mh.renderFringe(camera);
+        
+        if(end) {
+        	batch.begin();
+        	renderEndCircle();
+        	batch.end();
+        }
+	}
+	
+	float circleSize = 1; boolean circleReverse;
+	public void renderEndCircle() {
+		float tar;
+		
+		if(!circleReverse) {
+			tar = Gdx.graphics.getWidth()*1.1f;
+			
+			circleSize+=(tar-circleSize)*0.05f;
+			if((int) circleSize+250>=tar) {
+				mh.gen();
+				p = new Player(camera, mh);
+				circleReverse = true;
+			}
+		} else {
+			tar = 0;
+			
+			circleSize+=(tar-circleSize)*0.25f;
+			if((int) circleSize-50<=tar) {
+				end = false;
+				circleReverse = false;
+			}
+		}
+		
+		endCircle.setSize(circleSize, circleSize);
+		endCircle.setPosition(p.box.x+p.box.width/2-endCircle.getWidth()/2, p.box.y+p.box.height/2-endCircle.getHeight()/2);
+		endCircle.draw(batch);
 	}
 	
 	private void renderBoxes() {
@@ -109,7 +151,7 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 	@Override
 	public boolean keyUp(int keycode) {
 		if(keycode==Input.Keys.B) showHitBoxes = !showHitBoxes;
-		if(keycode==Input.Keys.K) mh.gen();
+		if(keycode==Input.Keys.R) end=true;
 		return false;
 	}
 

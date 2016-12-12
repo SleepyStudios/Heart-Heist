@@ -10,8 +10,8 @@ import net.sleepystudios.bankvault.BankVault;
 import net.sleepystudios.bankvault.MapHandler;
 
 public class ProcObject {
-	Sprite sprite;
-	MapHandler mh;
+	protected Sprite sprite;
+	protected MapHandler mh;
 	public Rectangle rect = null;
 	public boolean hasCollision = true;
 	

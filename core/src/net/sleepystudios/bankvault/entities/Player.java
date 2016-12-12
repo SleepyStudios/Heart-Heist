@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import net.sleepystudios.bankvault.AnimGenerator;
+import net.sleepystudios.bankvault.BankVault;
 import net.sleepystudios.bankvault.MapHandler;
 
 public class Player extends Entity {
@@ -45,8 +46,9 @@ public class Player extends Entity {
 		
 		animTmr += Gdx.graphics.getDeltaTime();
 		
+		if(BankVault.end) return;
         batch.draw(anim[animIndex].getKeyFrame(animTmr, animIndex<=RIGHT), shownX+=(x-shownX)*0.2f, shownY+=(y-shownY)*0.2f);
-	
+        
         // shadow form
         if(animIndex==SHADOW) {
         	tmrShadow+=Gdx.graphics.getDeltaTime();

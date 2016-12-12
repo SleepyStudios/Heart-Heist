@@ -72,6 +72,10 @@ public class MapHandler {
 			procObjs.add(new ProcObject(objs[BankVault.rand(0, objs.length-1)], this));
 		}
 		
+		for(int i=0; i<size[2]; i++) {
+			procObjs.add(new Camera(this));
+		}
+		
 		drones.clear();
 		for(int i=0; i<size[2]; i++) {
 			drones.add(new Drone(this));
