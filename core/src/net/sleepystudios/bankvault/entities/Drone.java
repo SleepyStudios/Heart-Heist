@@ -1,8 +1,10 @@
 package net.sleepystudios.bankvault.entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 
 import net.sleepystudios.bankvault.AnimGenerator;
 import net.sleepystudios.bankvault.BankVault;
@@ -11,7 +13,7 @@ import net.sleepystudios.bankvault.MapHandler;
 public class Drone extends Entity {
 	public float angle, shownAngle;
 	public int dir;
-	Animation anim;
+	Animation anim; Texture shadow;
 		
 	public Drone(MapHandler mh) {
 		super(mh);
@@ -21,6 +23,7 @@ public class Drone extends Entity {
 		FH = 22;
 		
 		anim = new Animation(animSpeed, AnimGenerator.gen("drone.png", FW, FH));
+		shadow = new Texture("drone_shadow.png");
 		
 		while(isBlocked(x, y)) {
 			x = BankVault.snap(BankVault.rand(0, mh.getWidth()-FW));
@@ -36,6 +39,8 @@ public class Drone extends Entity {
 		shownAngle += (angle - shownAngle) * 0.15f;
 		
 		animTmr+=Gdx.graphics.getDeltaTime();
+		
+		batch.draw(shadow, x+FW/2-shadow.getWidth()/2, y+FH/2-shadow.getHeight()/2);
 		batch.draw(anim.getKeyFrame(animTmr), x, y, FW/2, FH/2, FW, FH, 1f, 1f, shownAngle-90f);
 		
         update();
@@ -104,5 +109,20 @@ public class Drone extends Entity {
 	private void setDestination() {
 		dir = BankVault.rand(0, 3);
 		angle = dir*90f;
+	}
+	
+	public boolean castRay(Player p) {
+		Vector2 me = new Vector2(box.getX()+box.getWidth()/2, box.getY()+box.getHeight()/2);
+		Vector2 player = new Vector2(p.box.getX()+p.box.getWidth()/2, p.box.getX()+p.box.getWidth()/2);
+		
+//		for(int i=0; i<Builder.mainGame.blocks.size(); i++) {
+//			Block b = Builder.mainGame.blocks.get(i);
+//			
+//			// check for collision
+//			if(b.poly!=null && b.solid && Intersector.intersectSegmentPolygon(player, block, b.poly)) {
+//				return false;
+//			}
+//		}
+		return true;
 	}
 }

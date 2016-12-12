@@ -26,7 +26,7 @@ public class MapHandler {
 	
 	public MapHandler(TiledMap map) {
 		this.map = map;
-		mapRenderer = new OrthogonalTiledMapRenderer(map);
+		mapRenderer = new FixedTiledMapRenderer(map);
 		
 		loadRects();
 		gen();
