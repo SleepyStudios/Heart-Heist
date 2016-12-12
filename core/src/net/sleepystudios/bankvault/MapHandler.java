@@ -2,6 +2,8 @@ package net.sleepystudios.bankvault;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
@@ -92,11 +94,47 @@ public class MapHandler {
 		
 		bullets.clear();
 		tracers.clear();
+		BankVault.actionMessages.clear();
+		messageNum = 0;
 	}
 	
+	int messageNum = 0; float tmrMessages;
 	public void render(OrthographicCamera camera) {
 		mapRenderer.setView(camera);
         mapRenderer.render(layers);
+        
+        tmrMessages+=Gdx.graphics.getDeltaTime();
+        if(tmrMessages>=2) {
+        	if(messageNum<4) messageNum++;
+        	tmrMessages = 0;
+        }
+        
+        if(messageNum==0) {
+        	addActionMessage("Use WASD to move", 12, Color.WHITE);
+        }
+        if(messageNum==1) {
+        	addActionMessage("Use SPACE to hide", 12, Color.WHITE);
+        }
+        if(messageNum==2) {
+        	addActionMessage("Avoid drones and cameras", 12, Color.WHITE);
+        }
+        if(messageNum==3) {
+        	addActionMessage("Find your heart", 12, Color.WHITE);
+        }
+	}
+	
+	public void addActionMessage(String message, int size, Color colour) {
+		// make sure its not like any others
+		for(ActionMessage am : BankVault.actionMessages) {
+			if(message.equals(am.text)) return;
+		}
+		
+		if(BankVault.actionMessages.size()>=1) {
+			BankVault.actionMessages.add(new ActionMessage(message, size, colour));
+			BankVault.actionMessages.remove(0);
+		} else {
+			BankVault.actionMessages.add(new ActionMessage(message, size, colour));
+		}
 	}
 	
 	public void renderFringe(OrthographicCamera camera) {

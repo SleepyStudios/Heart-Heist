@@ -1,5 +1,6 @@
 package net.sleepystudios.bankvault;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -36,6 +37,7 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 	public static boolean showHitBoxes;
 	Sprite endCircle;
 	public static boolean end;
+	public static ArrayList<ActionMessage> actionMessages = new ArrayList<ActionMessage>();
 	
 	@Override
 	public void create () {
@@ -111,6 +113,10 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
         
         for(Drone d : mh.drones) if(d.e!=null) d.e.render(batch);
         if(mh.p.e!=null) mh.p.e.render(batch);
+        
+        for(int i=0; i<actionMessages.size(); i++) {
+        	actionMessages.get(i).render(batch, mh);
+        }
         
         batch.end();
         
