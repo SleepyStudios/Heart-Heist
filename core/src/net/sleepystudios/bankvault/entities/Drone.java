@@ -18,7 +18,7 @@ public class Drone extends Entity {
 	public Drone(MapHandler mh) {
 		super(mh);
 		
-		OX = OY = 6;
+		OX = OY = 4;
 		FW = 24;
 		FH = 22;
 		
@@ -51,7 +51,7 @@ public class Drone extends Entity {
 		animTmr+=Gdx.graphics.getDeltaTime();
 		
 		batch.draw(shadow, x+FW/2-shadow.getWidth()/2, y+FH/2-shadow.getHeight()/2);
-		batch.draw(anim.getKeyFrame(animTmr), x, y, FW/2, FH/2, FW, FH, 1f, 1f, shownAngle-90f);
+		batch.draw(anim.getKeyFrame(animTmr, true), x, y, FW/2, FH/2, FW, FH, 1f, 1f, shownAngle-90f);
 		
         update();
 	}
