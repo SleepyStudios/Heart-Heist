@@ -27,7 +27,7 @@ public class Drone extends Entity {
 	public Drone(MapHandler mh) {
 		super(mh);
 		
-		OX = OY = 4;
+		OX = OY = 2;
 		FW = 24;
 		FH = 22;
 		
@@ -95,7 +95,7 @@ public class Drone extends Entity {
 				}
 			}
 			
-			if(castRay(me, player, mh.p) && Intersector.overlapConvexPolygons(vision, boxToPoly(mh.p.box, false)) && mh.p.animIndex!=mh.p.SHADOW) {
+			if(castRay(me, player, mh.p) && Intersector.overlapConvexPolygons(vision, boxToPoly(mh.p.box, false)) && mh.p.animIndex!=mh.p.SHADOW && !BankVault.win) {
 				tmrShoot+=Gdx.graphics.getDeltaTime();
 				if(tmrShoot>=0.25) {
 					mh.bullets.add(new Bullet(new float[]{me.x-12, me.y-12, player.x-12, player.y-12}, mh));

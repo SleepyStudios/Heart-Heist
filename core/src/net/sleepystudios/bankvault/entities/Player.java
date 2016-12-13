@@ -116,7 +116,11 @@ public class Player extends Entity {
         for(ProcObject o : mh.procObjs) {
         	if(o instanceof Heart) {
         		if(Intersector.overlaps(o.rect, box)) {
-        			o.sprite.scale(1.1f*o.sprite.getScaleX()*Gdx.graphics.getDeltaTime());
+        			if(!BankVault.win) {
+        				BankVault.endCircle.setColor(new Color(230/255f, 26/255f, 26/255f, 1f));
+        				BankVault.end = true;
+        				BankVault.win = true;
+        			}
         		}
         	}
         }

@@ -11,6 +11,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
 
 import net.sleepystudios.bankvault.proc.ProcObject;
 
@@ -114,8 +116,15 @@ public class Bullet {
 			if(o.rect!=null && o.hasCollision && Intersector.overlapConvexPolygons(boxToPoly(), makePoly(o.rect))) return true;
 		}
 		
-		if(Intersector.overlaps(box, mh.p.box)) {
-			BankVault.end = true;
+		if(Intersector.overlaps(box, mh.p.box) && !BankVault.win) {
+			float delay = 0.1f;
+			Timer.schedule(new Task(){
+			    @Override
+			    public void run() {
+			    	BankVault.endCircle.setColor(Color.BLACK);
+			    	BankVault.end = true;
+			    }
+			}, delay);
 			return true;
 		}
         

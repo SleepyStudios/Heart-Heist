@@ -97,6 +97,7 @@ public class MapHandler {
 		BankVault.actionMessages.clear();
 		messageNum = 0;
 		obDone = false;
+		tmrMessages = 0;
 	}
 	
 	int messageNum = 0; float tmrMessages;
@@ -104,6 +105,8 @@ public class MapHandler {
 	public void render(OrthographicCamera camera) {
 		mapRenderer.setView(camera);
         mapRenderer.render(layers);
+        
+        if(BankVault.end) return;
         
         tmrMessages+=Gdx.graphics.getDeltaTime();
         int time=2;

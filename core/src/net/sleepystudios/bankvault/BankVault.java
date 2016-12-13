@@ -35,8 +35,8 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 	MapHandler mh;
 	ShapeRenderer sr;
 	public static boolean showHitBoxes;
-	Sprite endCircle;
-	public static boolean end;
+	public static Sprite endCircle;
+	public static boolean end, win;
 	public static ArrayList<ActionMessage> actionMessages = new ArrayList<ActionMessage>();
 	
 	@Override
@@ -131,24 +131,38 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 	public void renderEndCircle() {
 		float tar;
 		
-		if(!circleReverse) {
+		if(win) {
 			tar = Gdx.graphics.getWidth()*1.1f;
 			
-			circleSize+=(tar-circleSize)*0.06f;
-			if((int) circleSize+275>=tar) {
-				mh.gen();
+			circleSize+=(tar-circleSize)*0.04f;
+			if((int) circleSize>=tar) {
 				circleReverse = true;
 			}
 		} else {
-			tar = 0;
-			
-			circleSize+=(tar-circleSize)*0.3f;
-			if((int) circleSize-50<=tar) {
-				end = false;
-				circleReverse = false;
+			if(!circleReverse) {
+				tar = Gdx.graphics.getWidth()*1.1f;
+				
+				circleSize+=(tar-circleSize)*0.06f;
+				if((int) circleSize+275>=tar) {
+					mh.gen();
+					circleReverse = true;
+				}
+			} else if(circleReverse) {
+				tar = 0;
+				
+				circleSize+=(tar-circleSize)*0.3f;
+				if((int) circleSize-50<=tar) {
+					end = false;
+					circleReverse = false;
+				}
 			}
 		}
 		
+//		if(win) {
+//			endCircle.setColor(new Color(230/255f, 26/255f, 26/255f, 1f));
+//		} else {
+//			endCircle.setColor(Color.BLACK);
+//		}
 		endCircle.setSize(circleSize, circleSize);
 		endCircle.setPosition(mh.p.box.x+mh.p.box.width/2-endCircle.getWidth()/2, mh.p.box.y+mh.p.box.height/2-endCircle.getHeight()/2);
 		endCircle.draw(batch);
@@ -229,7 +243,11 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 	@Override
 	public boolean keyUp(int keycode) {
 		if(keycode==Input.Keys.B) showHitBoxes = !showHitBoxes;
-		if(keycode==Input.Keys.R) end=true;
+		if(keycode==Input.Keys.R) {
+			endCircle.setColor(Color.BLACK);
+			end=true;
+		}
+		if(keycode==Input.Keys.SPACE) if(win) win = false;
 		return false;
 	}
 
