@@ -49,10 +49,14 @@ public class ActionMessage {
 	public void render(SpriteBatch batch, MapHandler mh) {
 		checkFont();
 		
+		boolean winMsg = text.toLowerCase().contains("found") || text.toLowerCase().contains("again");
+		
 		int index = BankVault.actionMessages.indexOf(this);
 		float tar = mh.p.box.y + 50 + (index*20);
+		if(winMsg) tar = Gdx.graphics.getHeight()/2 + (index*30);
+		
 		y+=(tar-y)*0.2f;
-		tmrLife+=Gdx.graphics.getDeltaTime();
+		if(!winMsg) tmrLife+=Gdx.graphics.getDeltaTime();
 		
 		if(Math.abs(y - tar) <= 2 && tmrLife>=2) {
 			if(font.getColor().a-0.2f>0) {
@@ -64,6 +68,11 @@ public class ActionMessage {
 		}
 		
 		GlyphLayout gl = new GlyphLayout(font, text);
-		font.draw(batch, text, mh.p.box.x+mh.p.box.getWidth()/2-gl.width/2, y);
+		
+		if(winMsg) {
+			font.draw(batch, text, Gdx.graphics.getWidth()/2-gl.width/2, y);
+		} else {
+			font.draw(batch, text, mh.p.box.x+mh.p.box.getWidth()/2-gl.width/2, y);
+		}
 	}
 }

@@ -71,6 +71,7 @@ public class Player extends Entity {
                     	animIndex = IDLE;
                     	reversed = false;
                     	tmrShadow = 0;
+                    	BankVault.playSound("up");
         			}
         		}
             }
@@ -120,6 +121,8 @@ public class Player extends Entity {
         				BankVault.endCircle.setColor(new Color(230/255f, 26/255f, 26/255f, 1f));
         				BankVault.end = true;
         				BankVault.win = true;
+        				BankVault.actionMessages.clear();
+        				BankVault.playSound("win");
         			}
         		}
         	}
@@ -169,6 +172,7 @@ public class Player extends Entity {
 		animTmr = 0;
 		animIndex = SHADOW;
 		canShadow = false;
+		BankVault.playSound("shadow");
 	}
 	
 	@Override

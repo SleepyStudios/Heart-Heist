@@ -64,7 +64,7 @@ public class MapHandler {
 	}
 	
 	public void gen() {
-		int size[] = {30, 15, 5, 5};
+		int size[] = {50, 30, 15, 12};
 		
 		procObjs.clear();
 		
@@ -123,7 +123,7 @@ public class MapHandler {
         	addActionMessage("Use SPACE to hide", 12, Color.WHITE);
         }
         if(messageNum==2) {
-        	addActionMessage("Avoid drones and cameras", 12, Color.WHITE);
+        	addActionMessage("Avoid drones", 12, Color.WHITE);
         }
         if(messageNum==3 && !obDone) {
         	addActionMessage("Find your heart", 12, Color.WHITE);
@@ -139,6 +139,8 @@ public class MapHandler {
 		for(ActionMessage am : BankVault.actionMessages) {
 			if(message.equals(am.text)) return;
 		}
+		
+		BankVault.playSound("select");
 		
 		if(BankVault.actionMessages.size()>=1) {
 			BankVault.actionMessages.add(new ActionMessage(message, size, colour));

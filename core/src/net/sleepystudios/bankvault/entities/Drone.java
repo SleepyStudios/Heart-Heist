@@ -49,7 +49,7 @@ public class Drone extends Entity {
 		Vector2 pos = new Vector2(x, y);
 		Vector2 spawn = new Vector2(mh.spawnX, mh.spawnY);
 		
-		if(pos.dst(spawn)>150) return true; 
+		if(pos.dst(spawn)>200) return true; 
 		
 		return false;
 	}
@@ -83,10 +83,12 @@ public class Drone extends Entity {
 				e = new Exclam(me.x-10, me.y);
 				mh.p.e = new Exclam(player.x-10, player.y);
 				seesPlayer = true;
+				
+				BankVault.playSound("spotted");
 			}
 			
 			tmrSpot+=Gdx.graphics.getDeltaTime();
-			if(tmrSpot>=0.1) {
+			if(tmrSpot>=0.2) {
 				if(me.dst(player)<maxRange) {
 					float yd = y - mh.p.y;
 					float xd = x - mh.p.x;
@@ -98,6 +100,7 @@ public class Drone extends Entity {
 			if(castRay(me, player, mh.p) && Intersector.overlapConvexPolygons(vision, boxToPoly(mh.p.box, false)) && mh.p.animIndex!=mh.p.SHADOW && !BankVault.win) {
 				tmrShoot+=Gdx.graphics.getDeltaTime();
 				if(tmrShoot>=0.25) {
+					BankVault.playSound("shoot");
 					mh.bullets.add(new Bullet(new float[]{me.x-12, me.y-12, player.x-12, player.y-12}, mh));
 					tmrShoot = 0;
 				}

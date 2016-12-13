@@ -7,8 +7,10 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL30;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -30,7 +32,7 @@ import net.sleepystudios.bankvault.proc.Heart;
 import net.sleepystudios.bankvault.proc.ProcObject;
 
 public class BankVault extends ApplicationAdapter implements InputProcessor {
-	SpriteBatch batch;
+	SpriteBatch batch, guiBatch;
 	public static OrthographicCamera camera;
 	MapHandler mh;
 	ShapeRenderer sr;
@@ -42,6 +44,7 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
+		guiBatch = new SpriteBatch();
 		
 		// camera
         float w = Gdx.graphics.getWidth();
@@ -63,13 +66,17 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 		endCircle.setSize(1, 1);
 		endCircle.setPosition(Gdx.graphics.getWidth()/2-endCircle.getWidth()/2, Gdx.graphics.getHeight()/2-endCircle.getHeight()/2);
 		
+		Music music = Gdx.audio.newMusic(Gdx.files.internal("wakeup.mp3"));
+		music.setLooping(true);
+		music.play();
+		
 		Gdx.input.setInputProcessor(this);
 	}
 
 	@Override
 	public void render () {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		camera.update();
 		mh.render(camera);
@@ -124,7 +131,17 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
         	batch.begin();
         	renderEndCircle();
         	batch.end();
+        	
+        	if(win) {
+        		guiBatch.begin();
+        		for(int i=0; i<actionMessages.size(); i++) {
+                	actionMessages.get(i).render(guiBatch, mh);
+                }
+        		guiBatch.end();
+        	}
         }
+        
+        
 	}
 	
 	float circleSize = 1; boolean circleReverse;
@@ -137,6 +154,12 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 			circleSize+=(tar-circleSize)*0.04f;
 			if((int) circleSize>=tar) {
 				circleReverse = true;
+			}
+			if((int) circleSize+700>=tar) {
+				if(!winMsg) {
+					mh.addActionMessage("You found your heart! Press Space to play again", 24, Color.WHITE);
+					winMsg = true;
+				}
 			}
 		} else {
 			if(!circleReverse) {
@@ -154,15 +177,11 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 				if((int) circleSize-50<=tar) {
 					end = false;
 					circleReverse = false;
+					win = false;
 				}
 			}
 		}
 		
-//		if(win) {
-//			endCircle.setColor(new Color(230/255f, 26/255f, 26/255f, 1f));
-//		} else {
-//			endCircle.setColor(Color.BLACK);
-//		}
 		endCircle.setSize(circleSize, circleSize);
 		endCircle.setPosition(mh.p.box.x+mh.p.box.width/2-endCircle.getWidth()/2, mh.p.box.y+mh.p.box.height/2-endCircle.getHeight()/2);
 		endCircle.draw(batch);
@@ -239,15 +258,22 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 	public boolean keyDown(int keycode) {
 		return false;
 	}
-
+	
+	boolean winMsg;
 	@Override
 	public boolean keyUp(int keycode) {
-		if(keycode==Input.Keys.B) showHitBoxes = !showHitBoxes;
+		//if(keycode==Input.Keys.B) showHitBoxes = !showHitBoxes;
 		if(keycode==Input.Keys.R) {
 			endCircle.setColor(Color.BLACK);
 			end=true;
 		}
-		if(keycode==Input.Keys.SPACE) if(win) win = false;
+		if(keycode==Input.Keys.SPACE) {
+			if(win) {
+				win = false;
+				winMsg = false;
+
+			}
+		}
 		return false;
 	}
 
@@ -303,4 +329,9 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 		int s = 32;
 		return Math.round(num/s) * s;
 	}
+    
+    public static void playSound(String s) {
+    	Sound sound = Gdx.audio.newSound(Gdx.files.internal(s + ".wav"));
+    	sound.play(1f);
+    }
 }

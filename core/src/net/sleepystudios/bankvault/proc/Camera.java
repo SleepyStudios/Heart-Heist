@@ -1,13 +1,17 @@
 package net.sleepystudios.bankvault.proc;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import net.sleepystudios.bankvault.MapHandler;
 
 public class Camera extends DecalProcObject {
+	ShapeRenderer sr;
+	
 	public Camera(MapHandler mh) {
 		super("camera", mh);
+		sr = new ShapeRenderer();
 	}
 	
 	@Override
@@ -68,7 +72,7 @@ public class Camera extends DecalProcObject {
 		Vector2 pos = new Vector2(x, y);
 		Vector2 spawn = new Vector2(mh.spawnX, mh.spawnY);
 		
-		if(pos.dst(spawn)>200) return true; 
+		if(pos.dst(spawn)>100) return true; 
 		
 		return false;
 	}

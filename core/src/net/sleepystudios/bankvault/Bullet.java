@@ -95,6 +95,7 @@ public class Bullet {
 
     // blocking
     Rectangle box;
+    boolean playedSound;
     public boolean isBlocked(float x, float y, MapHandler mh) {
         // create the bullet rectangle
         box = new Rectangle(x+3, y-2, 18, 6);
@@ -118,6 +119,12 @@ public class Bullet {
 		
 		if(Intersector.overlaps(box, mh.p.box) && !BankVault.win) {
 			float delay = 0.1f;
+			
+			if(!playedSound) {
+				BankVault.playSound("hit");
+				playedSound = true;
+			}
+			
 			Timer.schedule(new Task(){
 			    @Override
 			    public void run() {
