@@ -66,7 +66,7 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 		endCircle.setSize(1, 1);
 		endCircle.setPosition(Gdx.graphics.getWidth()/2-endCircle.getWidth()/2, Gdx.graphics.getHeight()/2-endCircle.getHeight()/2);
 		
-		Music music = Gdx.audio.newMusic(Gdx.files.internal("wakeup.mp3"));
+		Music music = Gdx.audio.newMusic(Gdx.files.internal("wakeup2.mp3"));
 		music.setLooping(true);
 		music.play();
 		

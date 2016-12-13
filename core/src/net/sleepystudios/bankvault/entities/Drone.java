@@ -79,7 +79,7 @@ public class Drone extends Entity {
 		Vector2 player = new Vector2(mh.p.box.getX()+FW/2, mh.p.box.getY()+mh.p.FH/2);
 		
 		if(castRay(me, player, mh.p)) {
-			if(!seesPlayer) {
+			if(!seesPlayer && !BankVault.win) {
 				e = new Exclam(me.x-10, me.y);
 				mh.p.e = new Exclam(player.x-10, player.y);
 				seesPlayer = true;
