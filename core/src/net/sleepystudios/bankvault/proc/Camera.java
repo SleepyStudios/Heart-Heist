@@ -30,8 +30,6 @@ public class Camera extends DecalProcObject {
 	
 	@Override
 	public void render(SpriteBatch batch) {
-		super.render(batch);
-		
 		batch.end();
 		sr.setProjectionMatrix(BankVault.camera.combined);
 		sr.begin(ShapeType.Filled);
@@ -49,6 +47,8 @@ public class Camera extends DecalProcObject {
 		
 		sr.end();
 		batch.begin();
+		
+		super.render(batch);
 	}
 	
 	private void makeLaser() {
@@ -69,6 +69,14 @@ public class Camera extends DecalProcObject {
 					}
 				}
 				
+				for(ProcObject o : mh.procObjs) {
+					if(o.hasCollision && Intersector.overlaps(o.rect, lRect)) {
+						offset-=32;
+						found = true;
+						break;
+					}
+				}
+				
 				offset+=32;
 			}
 			break;
@@ -79,6 +87,13 @@ public class Camera extends DecalProcObject {
 				
 				for(Rectangle r : mh.rects) {
 					if(Intersector.overlaps(r, lRect)) {
+						found = true;
+						break;
+					}
+				}
+				
+				for(ProcObject o : mh.procObjs) {
+					if(o.hasCollision && Intersector.overlaps(o.rect, lRect)) {
 						found = true;
 						break;
 					}
@@ -99,6 +114,13 @@ public class Camera extends DecalProcObject {
 					}
 				}
 				
+				for(ProcObject o : mh.procObjs) {
+					if(o.hasCollision && Intersector.overlaps(o.rect, lRect)) {
+						found = true;
+						break;
+					}
+				}
+				
 				offset+=32;
 			}
 			break;
@@ -109,6 +131,14 @@ public class Camera extends DecalProcObject {
 				
 				for(Rectangle r : mh.rects) {
 					if(Intersector.overlaps(r, lRect)) {
+						found = true;
+						break;
+					}
+				}
+				
+				for(ProcObject o : mh.procObjs) {
+					if(o.hasCollision && Intersector.overlaps(o.rect, lRect)) {
+						offset-=32;
 						found = true;
 						break;
 					}
