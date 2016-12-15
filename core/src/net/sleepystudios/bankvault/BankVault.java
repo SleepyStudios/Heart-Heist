@@ -68,7 +68,7 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 		
 		Music music = Gdx.audio.newMusic(Gdx.files.internal("wakeup2.mp3"));
 		music.setLooping(true);
-		music.play();
+		//music.play();
 		
 		Gdx.input.setInputProcessor(this);
 	}

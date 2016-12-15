@@ -1,13 +1,19 @@
 package net.sleepystudios.bankvault.proc;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
+import net.sleepystudios.bankvault.BankVault;
 import net.sleepystudios.bankvault.MapHandler;
 
 public class Camera extends DecalProcObject {
 	ShapeRenderer sr;
+	float laserD;
 	
 	public Camera(MapHandler mh) {
 		super("camera", mh);
@@ -19,6 +25,100 @@ public class Camera extends DecalProcObject {
 		super.gen();
 		checkPosition();
 		if(!checkDistance(sprite.getX(), sprite.getY())) gen();
+		makeLaser();
+	}
+	
+	@Override
+	public void render(SpriteBatch batch) {
+		super.render(batch);
+		
+		batch.end();
+		sr.setProjectionMatrix(BankVault.camera.combined);
+		sr.begin(ShapeType.Filled);
+		
+		sr.setColor(Color.RED);
+		if(sprite.getRotation()==0f) {
+			sr.line(new Vector2(rect.x+rect.width/2, rect.y+rect.height), new Vector2(rect.x+rect.width/2, rect.y+rect.height-laserD));
+		} else if(sprite.getRotation()==180f) {
+			sr.line(new Vector2(rect.x+rect.width/2, rect.y-rect.height), new Vector2(rect.x+rect.width/2, rect.y-rect.height+laserD));
+		} else if(sprite.getRotation()==90f) {
+			sr.line(new Vector2(rect.x-rect.width, rect.y+rect.height/2), new Vector2(rect.x-rect.width+laserD, rect.y+rect.height/2));
+		} else if(sprite.getRotation()==-90f) {
+			sr.line(new Vector2(rect.x+rect.width, rect.y+rect.height/2), new Vector2(rect.x+rect.width-laserD, rect.y+rect.height/2));
+		}
+		
+		sr.end();
+		batch.begin();
+	}
+	
+	private void makeLaser() {
+		boolean found = false;
+		float offset = 32;
+		Rectangle lRect;
+		
+		switch((int) sprite.getRotation()) {
+		case 0:
+			// up
+			while(!found) {
+				lRect = new Rectangle(rect.x, rect.y-offset, rect.width, rect.height);
+				
+				for(Rectangle r : mh.rects) {
+					if(Intersector.overlaps(r, lRect)) {
+						found = true;
+						break;
+					}
+				}
+				
+				offset+=32;
+			}
+			break;
+		case 180:
+			// down 
+			while(!found) {
+				lRect = new Rectangle(rect.x, rect.y+offset, rect.width, rect.height);
+				
+				for(Rectangle r : mh.rects) {
+					if(Intersector.overlaps(r, lRect)) {
+						found = true;
+						break;
+					}
+				}
+				
+				offset+=32;
+			}
+			break;
+		case 90:
+			// left 
+			while(!found) {
+				lRect = new Rectangle(rect.x+offset, rect.y, rect.width, rect.height);
+				
+				for(Rectangle r : mh.rects) {
+					if(Intersector.overlaps(r, lRect)) {
+						found = true;
+						break;
+					}
+				}
+				
+				offset+=32;
+			}
+			break;
+		case -90:
+			// right 
+			while(!found) {
+				lRect = new Rectangle(rect.x-offset, rect.y, rect.width, rect.height);
+				
+				for(Rectangle r : mh.rects) {
+					if(Intersector.overlaps(r, lRect)) {
+						found = true;
+						break;
+					}
+				}
+				
+				offset+=32;
+			}
+		}
+		
+		laserD = offset;
 	}
 	
 	private void checkPosition() {

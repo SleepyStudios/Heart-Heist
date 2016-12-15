@@ -96,7 +96,9 @@ public class Player extends Entity {
         			animIndex = IDLE;
         		}
         	}
-        } 
+        } else {
+        	if(animIndex==SHADOW) BankVault.playSound("up");
+        }
         
     	float speed = 150f * Gdx.graphics.getDeltaTime();
     	
