@@ -1,6 +1,8 @@
 package net.sleepystudios.bankvault.proc;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -13,6 +15,7 @@ import net.sleepystudios.bankvault.MapHandler;
 
 public class Camera extends DecalProcObject {
 	ShapeRenderer sr;
+	Sprite laser;
 	float laserD;
 	
 	public Camera(MapHandler mh) {
@@ -30,23 +33,26 @@ public class Camera extends DecalProcObject {
 	
 	@Override
 	public void render(SpriteBatch batch) {
-		batch.end();
-		sr.setProjectionMatrix(BankVault.camera.combined);
-		sr.begin(ShapeType.Filled);
+//		batch.end();
+//		sr.setProjectionMatrix(BankVault.camera.combined);
+//		sr.begin(ShapeType.Filled);
+//		
+//		sr.setColor(Color.RED);
+//		if(sprite.getRotation()==0f) {
+//			sr.line(new Vector2(rect.x+rect.width/2, rect.y+rect.height), new Vector2(rect.x+rect.width/2, rect.y+rect.height-laserD));
+//		} else if(sprite.getRotation()==180f) {
+//			sr.line(new Vector2(rect.x+rect.width/2, rect.y-rect.height), new Vector2(rect.x+rect.width/2, rect.y-rect.height+laserD));
+//		} else if(sprite.getRotation()==90f) {
+//			sr.line(new Vector2(rect.x-rect.width, rect.y+rect.height/2), new Vector2(rect.x-rect.width+laserD, rect.y+rect.height/2));
+//		} else if(sprite.getRotation()==-90f) {
+//			sr.line(new Vector2(rect.x+rect.width, rect.y+rect.height/2), new Vector2(rect.x+rect.width-laserD, rect.y+rect.height/2));
+//		}
+//		
+//		sr.end();
+//		batch.begin();
+//		
 		
-		sr.setColor(Color.RED);
-		if(sprite.getRotation()==0f) {
-			sr.line(new Vector2(rect.x+rect.width/2, rect.y+rect.height), new Vector2(rect.x+rect.width/2, rect.y+rect.height-laserD));
-		} else if(sprite.getRotation()==180f) {
-			sr.line(new Vector2(rect.x+rect.width/2, rect.y-rect.height), new Vector2(rect.x+rect.width/2, rect.y-rect.height+laserD));
-		} else if(sprite.getRotation()==90f) {
-			sr.line(new Vector2(rect.x-rect.width, rect.y+rect.height/2), new Vector2(rect.x-rect.width+laserD, rect.y+rect.height/2));
-		} else if(sprite.getRotation()==-90f) {
-			sr.line(new Vector2(rect.x+rect.width, rect.y+rect.height/2), new Vector2(rect.x+rect.width-laserD, rect.y+rect.height/2));
-		}
-		
-		sr.end();
-		batch.begin();
+		laser.draw(batch);
 		
 		super.render(batch);
 	}
@@ -55,6 +61,11 @@ public class Camera extends DecalProcObject {
 		boolean found = false;
 		float offset = 32;
 		Rectangle lRect;
+		
+		laser = new Sprite(new Texture("laser.png"));
+		laser.setOrigin(sprite.getOriginX(), sprite.getOriginY());
+		laser.setRotation(sprite.getRotation());
+		laser.setPosition(sprite.getX(), sprite.getY());
 		
 		switch((int) sprite.getRotation()) {
 		case 0:
@@ -79,6 +90,7 @@ public class Camera extends DecalProcObject {
 				
 				offset+=32;
 			}
+			laser.setPosition(sprite.getX(), sprite.getY()+sprite.getHeight()+32-offset);
 			break;
 		case 180:
 			// down 
@@ -101,6 +113,7 @@ public class Camera extends DecalProcObject {
 				
 				offset+=32;
 			}
+			laser.setPosition(sprite.getX(), sprite.getY()-sprite.getHeight()-32+offset);
 			break;
 		case 90:
 			// left 
@@ -123,6 +136,7 @@ public class Camera extends DecalProcObject {
 				
 				offset+=32;
 			}
+			laser.setPosition(sprite.getX()-sprite.getWidth()-32+offset, sprite.getY());
 			break;
 		case -90:
 			// right 
@@ -146,9 +160,11 @@ public class Camera extends DecalProcObject {
 				
 				offset+=32;
 			}
+			laser.setPosition(sprite.getX()+sprite.getWidth()+32-offset, sprite.getY());
 		}
 		
 		laserD = offset;
+		laser.setSize(laser.getWidth(), laserD);
 	}
 	
 	private void checkPosition() {
