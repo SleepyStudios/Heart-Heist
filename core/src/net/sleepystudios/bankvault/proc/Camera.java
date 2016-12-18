@@ -1,11 +1,10 @@
 package net.sleepystudios.bankvault.proc;
 
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -31,28 +30,45 @@ public class Camera extends DecalProcObject {
 		makeLaser();
 	}
 	
+	float tmrOff, nextOff = BankVault.rand(3f, 5f), holdTime = BankVault.rand(2f, 3f), tmrBlink, numBlinks;
+	boolean off, blinking, blink;
 	@Override
 	public void render(SpriteBatch batch) {
-//		batch.end();
-//		sr.setProjectionMatrix(BankVault.camera.combined);
-//		sr.begin(ShapeType.Filled);
-//		
-//		sr.setColor(Color.RED);
-//		if(sprite.getRotation()==0f) {
-//			sr.line(new Vector2(rect.x+rect.width/2, rect.y+rect.height), new Vector2(rect.x+rect.width/2, rect.y+rect.height-laserD));
-//		} else if(sprite.getRotation()==180f) {
-//			sr.line(new Vector2(rect.x+rect.width/2, rect.y-rect.height), new Vector2(rect.x+rect.width/2, rect.y-rect.height+laserD));
-//		} else if(sprite.getRotation()==90f) {
-//			sr.line(new Vector2(rect.x-rect.width, rect.y+rect.height/2), new Vector2(rect.x-rect.width+laserD, rect.y+rect.height/2));
-//		} else if(sprite.getRotation()==-90f) {
-//			sr.line(new Vector2(rect.x+rect.width, rect.y+rect.height/2), new Vector2(rect.x+rect.width-laserD, rect.y+rect.height/2));
-//		}
-//		
-//		sr.end();
-//		batch.begin();
-//		
+		if(off) {
+			tmrOff+=Gdx.graphics.getDeltaTime();
+			if(tmrOff>=holdTime) {
+				blinking = true;
+				tmrOff = 0;
+			}
+		} else {
+			tmrOff+=Gdx.graphics.getDeltaTime();
+			if(tmrOff>=nextOff) {
+				blinking = true;
+				tmrOff = 0;
+			}
+		}
 		
-		laser.draw(batch);
+		if(blinking) {
+			tmrBlink+=Gdx.graphics.getDeltaTime();
+			if(tmrBlink>=0.025f) {
+				blink = !blink;
+				numBlinks++;
+				
+				if(numBlinks>=10) {
+					blinking = false;
+					off = !off;
+					numBlinks = 0;
+				}
+				
+				tmrBlink = 0;
+			}
+		}
+		
+		if(blinking) {
+			if(!blink) laser.draw(batch);
+		} else {
+			if(!off) laser.draw(batch);
+		}
 		
 		super.render(batch);
 	}
@@ -82,7 +98,6 @@ public class Camera extends DecalProcObject {
 				
 				for(ProcObject o : mh.procObjs) {
 					if(o.hasCollision && Intersector.overlaps(o.rect, lRect)) {
-						offset-=32;
 						found = true;
 						break;
 					}
@@ -152,7 +167,6 @@ public class Camera extends DecalProcObject {
 				
 				for(ProcObject o : mh.procObjs) {
 					if(o.hasCollision && Intersector.overlaps(o.rect, lRect)) {
-						offset-=32;
 						found = true;
 						break;
 					}
@@ -219,6 +233,19 @@ public class Camera extends DecalProcObject {
 		Vector2 spawn = new Vector2(mh.spawnX, mh.spawnY);
 		
 		if(pos.dst(spawn)>100) return true; 
+		
+		// make sure they're away from other cameras
+		for(ProcObject o : mh.procObjs) {
+			if(!o.equals(this)) {
+				Vector2 cPos = new Vector2(o.rect.x, o.rect.y);
+				
+				if(o instanceof Camera) {
+					if(pos.dst(cPos)<=96) return false;
+				} else {
+					if(o.hasCollision) if(pos.dst(cPos)<=32) return false;
+				}
+			}
+		}
 		
 		return false;
 	}
