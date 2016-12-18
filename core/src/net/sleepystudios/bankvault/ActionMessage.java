@@ -49,7 +49,7 @@ public class ActionMessage {
 	public void render(SpriteBatch batch, MapHandler mh) {
 		checkFont();
 		
-		boolean winMsg = text.toLowerCase().contains("found") || text.toLowerCase().contains("again");
+		boolean winMsg = text.toLowerCase().contains("again");
 		
 		int index = BankVault.actionMessages.indexOf(this);
 		float tar = mh.p.box.y + 50 + (index*20);

@@ -16,6 +16,7 @@ import net.sleepystudios.bankvault.proc.Camera;
 import net.sleepystudios.bankvault.proc.DecalProcObject;
 import net.sleepystudios.bankvault.proc.Heart;
 import net.sleepystudios.bankvault.proc.HiddenProcObject;
+import net.sleepystudios.bankvault.proc.Key;
 import net.sleepystudios.bankvault.proc.ProcObject;
 
 public class MapHandler {
@@ -68,6 +69,8 @@ public class MapHandler {
 		
 		procObjs.clear();
 		
+		procObjs.add(new Key(this));
+		
 		procObjs.add(new Heart(this));
 		
 		String decals[] = {"notes1", "notes2", "notes3", "coins1", "coins2", "coins3"};
@@ -100,7 +103,7 @@ public class MapHandler {
 		tmrMessages = 0;
 	}
 	
-	int messageNum = 0; float tmrMessages;
+	public int messageNum = 0; float tmrMessages;
 	boolean obDone;
 	public void render(OrthographicCamera camera) {
 		mapRenderer.setView(camera);

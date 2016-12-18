@@ -21,6 +21,7 @@ import net.sleepystudios.bankvault.Exclam;
 import net.sleepystudios.bankvault.MapHandler;
 import net.sleepystudios.bankvault.proc.Camera;
 import net.sleepystudios.bankvault.proc.Heart;
+import net.sleepystudios.bankvault.proc.Key;
 import net.sleepystudios.bankvault.proc.ProcObject;
 
 public class Player extends Entity {
@@ -28,6 +29,7 @@ public class Player extends Entity {
 	Animation anim[] = new Animation[6];
 	public int animIndex;
 	public Exclam e;
+	boolean hasKey;
 	
 	public Player(MapHandler mh) {
 		super(mh);
@@ -128,13 +130,31 @@ public class Player extends Entity {
         for(ProcObject o : mh.procObjs) {
         	if(o instanceof Heart) {
         		if(Intersector.overlaps(o.rect, box)) {
-        			if(!BankVault.win) {
-        				BankVault.endCircle.setColor(new Color(230/255f, 26/255f, 26/255f, 1f));
-        				BankVault.end = true;
-        				BankVault.win = true;
-        				BankVault.actionMessages.clear();
-        				BankVault.playSound("win");
+        			if(hasKey) {
+        				if(!BankVault.win) {
+            				BankVault.endCircle.setColor(new Color(230/255f, 26/255f, 26/255f, 1f));
+            				BankVault.end = true;
+            				BankVault.win = true;
+            				BankVault.actionMessages.clear();
+            				BankVault.playSound("win");
+            				break;
+            			}
+        			} else {
+        				mh.messageNum = 5;
+        				mh.addActionMessage("You need the key!", 12, Color.WHITE);
+        				break;
         			}
+        		}
+        	}
+        	
+        	if(o instanceof Key) {
+        		if(Intersector.overlaps(o.rect, box)) {
+        			hasKey = true;
+        			mh.procObjs.remove(o);
+        			
+        			mh.messageNum = 5;
+        			mh.addActionMessage("You found the key!", 12, Color.WHITE);
+        			break;
         		}
         	}
         }

@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import net.sleepystudios.bankvault.AnimGenerator;
 import net.sleepystudios.bankvault.MapHandler;
 
-public class Heart extends DecalProcObject {
+public class Heart extends ProcObject {
 	Animation anim; float animTmr;
 	
 	public Heart(MapHandler mh) {
@@ -30,6 +30,11 @@ public class Heart extends DecalProcObject {
 		Vector2 spawn = new Vector2(mh.spawnX, mh.spawnY);
 		
 		if(pos.dst(spawn)>mh.getHeight()/2) return true; 
+		
+		Key k = null;
+		for(ProcObject o : mh.procObjs) if(o instanceof Key) k = (Key) o;
+		Vector2 key = new Vector2(k.rect.x, k.rect.y);
+		if(pos.dst(key)>mh.getHeight()/2) return true; 
 		
 		return false;
 	}
