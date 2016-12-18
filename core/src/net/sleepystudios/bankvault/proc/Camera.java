@@ -1,11 +1,14 @@
 package net.sleepystudios.bankvault.proc;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -69,6 +72,14 @@ public class Camera extends DecalProcObject {
 		} else {
 			if(!off) laser.draw(batch);
 		}
+		
+		batch.end();
+		sr.setProjectionMatrix(BankVault.camera.combined);
+		sr.begin(ShapeType.Line);
+		sr.setColor(Color.CYAN);
+		sr.polygon(laserPoly.getTransformedVertices());
+		sr.end();
+		batch.begin();
 		
 		super.render(batch);
 	}
@@ -179,6 +190,25 @@ public class Camera extends DecalProcObject {
 		
 		laserD = offset;
 		laser.setSize(laser.getWidth(), laserD);
+		makeLaserPoly();
+	}
+	
+	Polygon laserPoly;
+	private void makeLaserPoly() {
+		laserPoly = new Polygon(new float[] {
+				laser.getX(), laser.getY(), 
+				laser.getX(), laser.getY()+laser.getHeight(),
+				laser.getX()+laser.getWidth(), laser.getY()+laser.getHeight(),
+				laser.getX()+laser.getWidth(), laser.getY()});
+		
+		if(laser.getRotation()==0f || laser.getRotation()==180f) {
+			laserPoly.setOrigin(laser.getX()+laser.getWidth()/2, laser.getY()+32);
+		} else if(laser.getRotation()==90f) {
+			laserPoly.setOrigin(laser.getX()+32, laser.getY()+32);
+		} else if(laser.getRotation()==-90f) {
+			laserPoly.setOrigin(laser.getX(), laser.getY()+32);
+		}
+		laserPoly.rotate(laser.getRotation());
 	}
 	
 	private void checkPosition() {

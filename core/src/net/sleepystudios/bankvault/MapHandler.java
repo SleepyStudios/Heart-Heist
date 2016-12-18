@@ -140,7 +140,7 @@ public class MapHandler {
 			if(message.equals(am.text)) return;
 		}
 		
-		BankVault.playSound("select");
+		//BankVault.playSound("select");
 		
 		if(BankVault.actionMessages.size()>=1) {
 			BankVault.actionMessages.add(new ActionMessage(message, size, colour));
