@@ -64,7 +64,7 @@ public class MapHandler {
 	}
 	
 	public void gen() {
-		int size[] = {50, 30, 15, 0}; //15,12
+		int size[] = {50, 30, 15, 12};
 		
 		procObjs.clear();
 		
@@ -123,7 +123,7 @@ public class MapHandler {
         	addActionMessage("Use SPACE to hide", 12, Color.WHITE);
         }
         if(messageNum==2) {
-        	addActionMessage("Avoid drones", 12, Color.WHITE);
+        	addActionMessage("Avoid drones and lasers", 12, Color.WHITE);
         }
         if(messageNum==3 && !obDone) {
         	addActionMessage("Find your heart", 12, Color.WHITE);

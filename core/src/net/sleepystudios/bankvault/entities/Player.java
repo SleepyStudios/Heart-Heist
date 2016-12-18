@@ -10,11 +10,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
 
 import net.sleepystudios.bankvault.AnimGenerator;
 import net.sleepystudios.bankvault.BankVault;
 import net.sleepystudios.bankvault.Exclam;
 import net.sleepystudios.bankvault.MapHandler;
+import net.sleepystudios.bankvault.proc.Camera;
 import net.sleepystudios.bankvault.proc.Heart;
 import net.sleepystudios.bankvault.proc.ProcObject;
 
@@ -85,6 +90,10 @@ public class Player extends Entity {
             		tmrCanShadow = 0;
             	}
             }
+        }
+        
+        if(animIndex!=SHADOW) {
+        	checkLasers();
         }
         
 		// movement
@@ -181,6 +190,65 @@ public class Player extends Entity {
 	protected void move(float x, float y) {
 		super.move(x, y);
 		updateCam();
+	}
+	
+	public Polygon boxToPoly(Rectangle box) {
+    	if(box==null) return null;
+    	
+    	Polygon poly = new Polygon(new float[] {
+				box.getX(), box.getY(), 
+				box.getX(), box.getY()+box.getHeight(),
+				box.getX()+box.getWidth(), box.getY()+box.getHeight(),
+				box.getX()+box.getWidth(), box.getY()});
+    	
+		return poly; 
+    }
+	
+	boolean playedSound;
+	@Override
+	protected boolean isBlocked(float x, float y) {
+		updateHitBox(x, y);
+		if(x<0 || x>mh.getWidth()-mh.getTileSize() || y<0 || y>mh.getHeight()-mh.getTileSize()) return true;
+		
+		for(Rectangle r : mh.rects) {
+			if(Intersector.overlaps(box, r)) return true;
+		}
+		
+		for(ProcObject o : mh.procObjs) {
+			if(o.rect!=null && o.hasCollision && Intersector.overlaps(box, o.rect)) return true;
+		}
+		
+		if(checkLasers()) return true;
+		
+		return false;
+	}
+	
+	private boolean checkLasers() {
+		for(ProcObject o : mh.procObjs) {
+			if(o instanceof Camera) {
+				Camera c = (Camera) o;
+				if(c.visible() && Intersector.overlapConvexPolygons(boxToPoly(box), c.laserPoly)) {
+					float delay = 0.1f;
+					
+					if(!playedSound) {
+						BankVault.playSound("hit");
+						playedSound = true;
+					}
+					
+					Timer.schedule(new Task(){
+					    @Override
+					    public void run() {
+					    	BankVault.endCircle.setColor(Color.BLACK);
+					    	BankVault.end = true;
+					    }
+					}, delay);
+					
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 	
 	float shownCamX, shownCamY, camX, camY;

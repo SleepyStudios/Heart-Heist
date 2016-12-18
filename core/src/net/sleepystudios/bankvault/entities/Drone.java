@@ -114,7 +114,7 @@ public class Drone extends Entity {
 			float maxA = 60f;
 			
 			tmrChangeDir+=Gdx.graphics.getDeltaTime();
-			if(tmrChangeDir>=3) {
+			if(tmrChangeDir>=2) {
 				setDestination();
 				changeDest = false;
 				tmrChangeDir = 0;
@@ -127,6 +127,7 @@ public class Drone extends Entity {
 			} else if((int) tmrChangeDir==2 && changes==2) {
 				angle+=BankVault.rand(-maxA, maxA);
 				changes = 0;
+				tmrChangeDir=0;
 			}
 		}
 		

@@ -1,12 +1,10 @@
 package net.sleepystudios.bankvault.proc;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
@@ -33,7 +31,7 @@ public class Camera extends DecalProcObject {
 		makeLaser();
 	}
 	
-	float tmrOff, nextOff = BankVault.rand(3f, 5f), holdTime = BankVault.rand(2f, 3f), tmrBlink, numBlinks;
+	float tmrOff, nextOff = BankVault.rand(3f, 10f), holdTime = BankVault.rand(2f, 3f), tmrBlink, numBlinks;
 	boolean off, blinking, blink;
 	@Override
 	public void render(SpriteBatch batch) {
@@ -73,15 +71,16 @@ public class Camera extends DecalProcObject {
 			if(!off) laser.draw(batch);
 		}
 		
-		batch.end();
-		sr.setProjectionMatrix(BankVault.camera.combined);
-		sr.begin(ShapeType.Line);
-		sr.setColor(Color.CYAN);
-		sr.polygon(laserPoly.getTransformedVertices());
-		sr.end();
-		batch.begin();
-		
 		super.render(batch);
+	}
+	
+	public boolean visible() {
+		if(blinking) {
+			if(!blink) return true;
+		} else {
+			if(!off) return true;
+		}
+		return false;
 	}
 	
 	private void makeLaser() {
@@ -193,13 +192,13 @@ public class Camera extends DecalProcObject {
 		makeLaserPoly();
 	}
 	
-	Polygon laserPoly;
+	public Polygon laserPoly;
 	private void makeLaserPoly() {
 		laserPoly = new Polygon(new float[] {
-				laser.getX(), laser.getY(), 
-				laser.getX(), laser.getY()+laser.getHeight(),
-				laser.getX()+laser.getWidth(), laser.getY()+laser.getHeight(),
-				laser.getX()+laser.getWidth(), laser.getY()});
+				laser.getX()+15, laser.getY(), 
+				laser.getX()+15, laser.getY()+laser.getHeight(),
+				laser.getX()+15+2, laser.getY()+laser.getHeight(),
+				laser.getX()+15+2, laser.getY()});
 		
 		if(laser.getRotation()==0f || laser.getRotation()==180f) {
 			laserPoly.setOrigin(laser.getX()+laser.getWidth()/2, laser.getY()+32);
