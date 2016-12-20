@@ -70,7 +70,7 @@ public class Drone extends Entity {
         update();
 	}
 	
-	private float tmrChangeDir, tmrMove, tmrSpot, tmrShoot; 
+	private float tmrChangeDir, tmrMove, tmrSpot, tmrShoot, tmrReset; 
 	private boolean changeDest;
 	int changes = 0;
 	boolean seesPlayer;
@@ -83,6 +83,7 @@ public class Drone extends Entity {
 				e = new Exclam(me.x-10, me.y);
 				mh.p.e = new Exclam(player.x-10, player.y);
 				seesPlayer = true;
+				tmrReset = 0;
 				
 				BankVault.playSound("spotted");
 			}
@@ -101,12 +102,17 @@ public class Drone extends Entity {
 				tmrShoot+=Gdx.graphics.getDeltaTime();
 				if(tmrShoot>=0.25) {
 					BankVault.playSound("shoot");
-					mh.bullets.add(new Bullet(new float[]{me.x-12, me.y-12, player.x-12, player.y-12}, mh));
+					mh.bullets.add(new Bullet(new float[]{boxToPoly(box, true).getOriginX(), boxToPoly(box, true).getOriginY(), player.x-12, player.y-12}, mh));
 					tmrShoot = 0;
 				}
 			}
 		} else {
-			seesPlayer = false;
+			tmrReset+=Gdx.graphics.getDeltaTime();
+			if(tmrReset>=0.2) {
+				seesPlayer = false;
+				tmrReset = 0;
+			}
+			
 			tmrSpot = 0;
 		}
 		
@@ -202,7 +208,6 @@ public class Drone extends Entity {
 				box.getX(), box.getY()+box.getHeight(),
 				box.getX()+box.getWidth(), box.getY()+box.getHeight(),
 				box.getX()+box.getWidth(), box.getY()});
-    	
     	
     	if(vision) {
     		poly.setOrigin(this.box.getX()+this.box.getWidth()/2, this.box.getY()+this.box.getHeight()/2);
