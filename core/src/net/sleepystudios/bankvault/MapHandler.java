@@ -120,18 +120,10 @@ public class MapHandler {
         }
         
         if(messageNum==0) {
-        	if(!BankVault.hasController) {
-        		addActionMessage("Use WASD to move", 12, Color.WHITE);
-        	} else {
-        		addActionMessage("Use (LS) to move", 12, Color.WHITE);
-        	}
+        	addActionMessage("Use WASD or (LS) to move", 12, Color.WHITE);
         }
         if(messageNum==1) {
-        	if(!BankVault.hasController) {
-        		addActionMessage("Use SPACE to hide", 12, Color.WHITE);
-        	} else {
-        		addActionMessage("Use (A) to hide", 12, Color.WHITE);
-        	}
+        	addActionMessage("Use SPACE or (A) to hide", 12, Color.WHITE);
         }
         if(messageNum==2) {
         	addActionMessage("Avoid drones and lasers", 12, Color.WHITE);
@@ -141,11 +133,7 @@ public class MapHandler {
         	obDone = true;
         }
         if(messageNum==4) {
-        	if(!BankVault.hasController) {
-        		addActionMessage("Press R to restart anytime", 12, Color.WHITE);
-        	} else {
-        		addActionMessage("Press (B) to restart anytime", 12, Color.WHITE);
-        	}
+        	addActionMessage("Press R or (B) to restart anytime", 12, Color.WHITE);
         }
 	}
 	

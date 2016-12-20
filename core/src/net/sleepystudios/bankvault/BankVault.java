@@ -175,11 +175,7 @@ public class BankVault extends ApplicationAdapter implements InputProcessor, Con
 			}
 			if((int) circleSize+700>=tar) {
 				if(!winMsg) {
-					if(!hasController) {
-						mh.addActionMessage("You found your heart! Press Space to play again", 24, Color.WHITE);
-					} else {
-						mh.addActionMessage("You found your heart! Press (A) to play again", 24, Color.WHITE);
-					}
+					mh.addActionMessage("You found your heart! Press Space or (A) to play again", 24, Color.WHITE);
 					winMsg = true;
 				}
 			}
@@ -353,7 +349,6 @@ public class BankVault extends ApplicationAdapter implements InputProcessor, Con
 
 	@Override
 	public boolean buttonDown(Controller controller, int buttonCode) {
-		System.out.println(buttonCode);
 		if(buttonCode==Xbox.A) {
 			if(win) {
 				win = false;
@@ -379,7 +374,6 @@ public class BankVault extends ApplicationAdapter implements InputProcessor, Con
 
 	@Override
 	public boolean axisMoved(Controller controller, int axisCode, float value) {
-		//System.out.println(axisCode);
 		return false;
 	}
 

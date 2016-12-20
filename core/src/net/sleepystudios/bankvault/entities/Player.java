@@ -114,21 +114,21 @@ public class Player extends Entity {
         
     	float speed = 150f * Gdx.graphics.getDeltaTime();
     	
-    	if(!BankVault.hasController) {
-    		if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            	animIndex = UP;
-                if(!isBlocked(x, y+speed)) move(x, y + speed);
-            } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            	animIndex = LEFT;
-            	if(!isBlocked(x-speed, y)) move(x - speed, y);
-            } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            	animIndex = DOWN;
-            	if(!isBlocked(x, y-speed)) move(x, y - speed);
-            } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            	animIndex = RIGHT;
-            	if(!isBlocked(x+speed, y)) move(x + speed, y);
-            }
-    	} else {
+    	if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+        	animIndex = UP;
+            if(!isBlocked(x, y+speed)) move(x, y + speed);
+        } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+        	animIndex = LEFT;
+        	if(!isBlocked(x-speed, y)) move(x - speed, y);
+        } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+        	animIndex = DOWN;
+        	if(!isBlocked(x, y-speed)) move(x, y - speed);
+        } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+        	animIndex = RIGHT;
+        	if(!isBlocked(x+speed, y)) move(x + speed, y);
+        }
+    	
+    	if(BankVault.hasController) {
     		float zone = 0.7f;
     		
     		if(BankVault.pad.getAxis(Xbox.L_STICK_VERTICAL_AXIS)<=-zone) {

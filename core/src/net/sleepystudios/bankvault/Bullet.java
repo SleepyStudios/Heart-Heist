@@ -117,7 +117,7 @@ public class Bullet {
 			if(o.rect!=null && o.hasCollision && Intersector.overlapConvexPolygons(boxToPoly(), makePoly(o.rect))) return true;
 		}
 		
-		if(Intersector.overlaps(box, mh.p.box) && !BankVault.win) {
+		if(mh.p.animIndex!=mh.p.SHADOW && Intersector.overlaps(box, mh.p.box) && !BankVault.win) {
 			float delay = 0.1f;
 			
 			if(!playedSound) {
