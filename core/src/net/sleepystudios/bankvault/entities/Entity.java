@@ -8,7 +8,7 @@ import net.sleepystudios.bankvault.proc.ProcObject;
 
 public class Entity {
 	protected MapHandler mh;
-	float x, y;
+	public float x, y;
 	public Rectangle box;
 	float animSpeed = 0.125f, animTmr;
 	

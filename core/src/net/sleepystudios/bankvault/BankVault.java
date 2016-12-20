@@ -13,6 +13,7 @@ import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.controllers.PovDirection;
+import com.badlogic.gdx.controllers.mappings.Xbox;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -174,7 +175,11 @@ public class BankVault extends ApplicationAdapter implements InputProcessor, Con
 			}
 			if((int) circleSize+700>=tar) {
 				if(!winMsg) {
-					mh.addActionMessage("You found your heart! Press Space to play again", 24, Color.WHITE);
+					if(!hasController) {
+						mh.addActionMessage("You found your heart! Press Space to play again", 24, Color.WHITE);
+					} else {
+						mh.addActionMessage("You found your heart! Press (A) to play again", 24, Color.WHITE);
+					}
 					winMsg = true;
 				}
 			}
@@ -323,8 +328,10 @@ public class BankVault extends ApplicationAdapter implements InputProcessor, Con
 		return false;
 	}
 	
+	public static Controller pad;
 	private boolean isController(Controller c) {
 		if(c.getName().contains("Xbox") || c.getName().contains("360") || c.getName().contains("Wire")) {
+			pad = c;
 			return true;
 		}
 		return false;
@@ -339,14 +346,29 @@ public class BankVault extends ApplicationAdapter implements InputProcessor, Con
 
 	@Override
 	public void disconnected(Controller controller) {
-		if(Controllers.getControllers().size==0) {
+		if(Controllers.getControllers().size==0 || pad==controller) {
 			hasController = false;
 		}
 	}
 
 	@Override
 	public boolean buttonDown(Controller controller, int buttonCode) {
-
+		System.out.println(buttonCode);
+		if(buttonCode==Xbox.A) {
+			if(win) {
+				win = false;
+				winMsg = false;
+			} else {
+				if(mh.p.animIndex!=mh.p.SHADOW) {
+		    		mh.p.goShadow();
+				}
+			}
+		} else if(buttonCode==Xbox.B) {
+			if(!win) {
+				endCircle.setColor(Color.BLACK);
+				end=true;
+			}
+		}
 		return false;
 	}
 
@@ -357,6 +379,7 @@ public class BankVault extends ApplicationAdapter implements InputProcessor, Con
 
 	@Override
 	public boolean axisMoved(Controller controller, int axisCode, float value) {
+		//System.out.println(axisCode);
 		return false;
 	}
 

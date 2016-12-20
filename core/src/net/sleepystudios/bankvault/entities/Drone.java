@@ -75,10 +75,19 @@ public class Drone extends Entity {
 	int changes = 0;
 	boolean seesPlayer;
 	public void update() {
-		Vector2 me = new Vector2(box.getX()+FW/2, box.getY()+FH/2);
-		Vector2 player = new Vector2(mh.p.box.getX()+FW/2, mh.p.box.getY()+mh.p.FH/2);
+		//Vector2 me = new Vector2(box.getX()+FW/2, box.getY()+FH/2);
+		//Vector2 player = new Vector2(mh.p.box.getX()+FW/2, mh.p.box.getY()+mh.p.FH/2);
+		
+		Vector2 me = new Vector2(box.getX(), box.getY());
+		Vector2 player = new Vector2(mh.p.box.getX()+FW, mh.p.box.getY()+mh.p.FH);
 		
 		if(castRay(me, player, mh.p)) {
+			me.x = box.getX()+box.getWidth()/2;
+			me.y = box.getY()+box.getHeight()/2;
+			
+			player.x = mh.p.box.getX()+FW/2;
+			player.y = mh.p.box.getY()+mh.p.FH/2;
+			
 			if(!seesPlayer && !BankVault.win) {
 				e = new Exclam(me.x-10, me.y);
 				mh.p.e = new Exclam(player.x-10, player.y);
@@ -181,7 +190,7 @@ public class Drone extends Entity {
 		angle = dir*90f;
 	}
 	
-	int maxRange = 240;
+	int maxRange = 480;
 	public boolean castRay(Vector2 me, Vector2 player, Player p) {
 		if(!BankVault.camera.frustum.pointInFrustum(new Vector3(me.x, me.y, 0))) return false;
 		

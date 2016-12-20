@@ -2,6 +2,7 @@ package net.sleepystudios.bankvault.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.controllers.mappings.Xbox;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -113,19 +114,37 @@ public class Player extends Entity {
         
     	float speed = 150f * Gdx.graphics.getDeltaTime();
     	
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-        	animIndex = UP;
-            if(!isBlocked(x, y+speed)) move(x, y + speed);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-        	animIndex = LEFT;
-        	if(!isBlocked(x-speed, y)) move(x - speed, y);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-        	animIndex = DOWN;
-        	if(!isBlocked(x, y-speed)) move(x, y - speed);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-        	animIndex = RIGHT;
-        	if(!isBlocked(x+speed, y)) move(x + speed, y);
-        }
+    	if(!BankVault.hasController) {
+    		if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            	animIndex = UP;
+                if(!isBlocked(x, y+speed)) move(x, y + speed);
+            } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            	animIndex = LEFT;
+            	if(!isBlocked(x-speed, y)) move(x - speed, y);
+            } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            	animIndex = DOWN;
+            	if(!isBlocked(x, y-speed)) move(x, y - speed);
+            } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            	animIndex = RIGHT;
+            	if(!isBlocked(x+speed, y)) move(x + speed, y);
+            }
+    	} else {
+    		float zone = 0.7f;
+    		
+    		if(BankVault.pad.getAxis(Xbox.L_STICK_VERTICAL_AXIS)<=-zone) {
+    			animIndex = UP;
+                if(!isBlocked(x, y+speed)) move(x, y + speed);
+    		} else if(BankVault.pad.getAxis(Xbox.L_STICK_VERTICAL_AXIS)>=zone) {
+    			animIndex = DOWN;
+            	if(!isBlocked(x, y-speed)) move(x, y - speed);
+    		} else if(BankVault.pad.getAxis(Xbox.L_STICK_HORIZONTAL_AXIS)<=-zone) {
+    			animIndex = LEFT;
+            	if(!isBlocked(x-speed, y)) move(x - speed, y);
+    		} else if(BankVault.pad.getAxis(Xbox.L_STICK_HORIZONTAL_AXIS)>=zone) {
+    			animIndex = RIGHT;
+            	if(!isBlocked(x+speed, y)) move(x + speed, y);
+    		}
+    	}
         
         for(ProcObject o : mh.procObjs) {
         	if(o instanceof Heart) {
