@@ -9,6 +9,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.ControllerListener;
+import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -24,6 +28,7 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 import net.sleepystudios.bankvault.entities.Drone;
 import net.sleepystudios.bankvault.proc.Camera;
@@ -31,7 +36,7 @@ import net.sleepystudios.bankvault.proc.DecalProcObject;
 import net.sleepystudios.bankvault.proc.Heart;
 import net.sleepystudios.bankvault.proc.ProcObject;
 
-public class BankVault extends ApplicationAdapter implements InputProcessor {
+public class BankVault extends ApplicationAdapter implements InputProcessor, ControllerListener {
 	SpriteBatch batch, guiBatch;
 	public static OrthographicCamera camera;
 	MapHandler mh;
@@ -40,6 +45,7 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 	public static Sprite endCircle;
 	public static boolean end, win;
 	public static ArrayList<ActionMessage> actionMessages = new ArrayList<ActionMessage>();
+	public static boolean hasController;
 	
 	@Override
 	public void create () {
@@ -69,6 +75,19 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 		Music music = Gdx.audio.newMusic(Gdx.files.internal("wakeup2.mp3"));
 		music.setLooping(true);
 		music.play();
+		
+        Controllers.addListener(this);
+
+        if(Controllers.getControllers().size == 0) {
+            hasController = false;
+        } else {
+        	for(Controller c : Controllers.getControllers()) {
+            	if(isController(c)) {
+            		hasController = true;
+            		break;
+            	}
+            }
+        }
 		
 		Gdx.input.setInputProcessor(this);
 	}
@@ -140,8 +159,6 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
         		guiBatch.end();
         	}
         }
-        
-        
 	}
 	
 	float circleSize = 1; boolean circleReverse;
@@ -303,6 +320,63 @@ public class BankVault extends ApplicationAdapter implements InputProcessor {
 
 	@Override
 	public boolean scrolled(int amount) {
+		return false;
+	}
+	
+	private boolean isController(Controller c) {
+		if(c.getName().contains("Xbox") || c.getName().contains("360") || c.getName().contains("Wire")) {
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public void connected(Controller controller) {
+		if(isController(controller)) {
+			hasController = true;
+		}
+	}
+
+	@Override
+	public void disconnected(Controller controller) {
+		if(Controllers.getControllers().size==0) {
+			hasController = false;
+		}
+	}
+
+	@Override
+	public boolean buttonDown(Controller controller, int buttonCode) {
+
+		return false;
+	}
+
+	@Override
+	public boolean buttonUp(Controller controller, int buttonCode) {
+		return false;
+	}
+
+	@Override
+	public boolean axisMoved(Controller controller, int axisCode, float value) {
+		return false;
+	}
+
+	@Override
+	public boolean povMoved(Controller controller, int povCode, PovDirection value) {
+		return false;
+	}
+
+	@Override
+	public boolean xSliderMoved(Controller controller, int sliderCode, boolean value) {
+		return false;
+	}
+
+	@Override
+	public boolean ySliderMoved(Controller controller, int sliderCode, boolean value) {
+		return false;
+	}
+
+	@Override
+	public boolean accelerometerMoved(Controller controller, int accelerometerCode, Vector3 value) {
 		return false;
 	}
 	
