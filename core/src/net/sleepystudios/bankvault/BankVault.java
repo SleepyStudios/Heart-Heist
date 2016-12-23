@@ -280,7 +280,7 @@ public class BankVault extends ApplicationAdapter implements InputProcessor, Con
 	boolean winMsg;
 	@Override
 	public boolean keyUp(int keycode) {
-		if(keycode==Input.Keys.B) showHitBoxes = !showHitBoxes;
+		//if(keycode==Input.Keys.B) showHitBoxes = !showHitBoxes;
 		if(keycode==Input.Keys.R && !win) {
 			endCircle.setColor(Color.BLACK);
 			end=true;
